@@ -5,10 +5,12 @@ This workspace is for a shared browser RPG that kids can build together from dif
 ## Quick Start
 
 1. Open `game/index.html`.
-2. Move with arrow keys, WASD, or the direction buttons.
-3. Pick a team role from `docs/roles.md`.
-4. Edit only your team's files unless everyone agrees.
-5. Test the game after every small change.
+2. Choose **New Game**.
+3. Name your hero and pick a hero style.
+4. Move with arrow keys, WASD, or the direction buttons.
+5. Pick a team role from `docs/roles.md`.
+6. Edit only your team's files unless everyone agrees.
+7. Test the game after every small change.
 
 ## Folder Map
 
@@ -65,4 +67,3 @@ That script checks that map rows are the right size and that objects are inside 
 3. Ask everyone to write their name beside a task in `TEAM_BOARD.md`.
 4. Keep changes small: one map, one character, or one quest step at a time.
 5. Merge often after testing.
-

@@ -8,13 +8,93 @@
   </head>
   <body>
     <main class="shell">
-      <section class="game-view" aria-label="Game screen">
+      <section class="menu-screen screen" id="menuScreen" aria-label="Main menu">
+        <div class="menu-art" aria-hidden="true">
+          <img src="assets/art/gate.svg" alt="">
+          <img src="assets/art/key.svg" alt="">
+          <img src="assets/art/tree.svg" alt="">
+        </div>
+        <div class="menu-copy">
+          <p class="eyebrow">RPG collaboration starter</p>
+          <h1>Shared Quest</h1>
+          <p class="menu-line">Build a hero, explore Meadow Village, and open the North Gate.</p>
+          <div class="menu-actions">
+            <button class="primary-button" type="button" id="newGameButton">New Game</button>
+            <button class="secondary-button" type="button" id="creatorButton">Character Creator</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="creator-screen screen" id="creatorScreen" aria-label="Character creator" hidden>
+        <header class="screen-header">
+          <div>
+            <p class="eyebrow">Character creator</p>
+            <h1>Make Your Hero</h1>
+          </div>
+          <button class="secondary-button" type="button" id="creatorBackButton">Back</button>
+        </header>
+
+        <form class="creator-layout" id="characterForm">
+          <section class="creator-panel" aria-label="Hero name">
+            <label class="field-label" for="heroName">Hero name</label>
+            <input id="heroName" name="heroName" maxlength="18" value="Player One" autocomplete="off">
+            <p class="field-help">This name appears in the adventure messages.</p>
+          </section>
+
+          <section class="creator-panel" aria-label="Hero style">
+            <h2>Hero Style</h2>
+            <div class="avatar-options" id="avatarOptions">
+              <button class="avatar-option selected" type="button" data-style="trail" aria-pressed="true">
+                <span class="avatar-token avatar-trail" aria-hidden="true">
+                  <span class="avatar-head"></span>
+                  <span class="avatar-body"></span>
+                </span>
+                <span>Trail Scout</span>
+              </button>
+              <button class="avatar-option" type="button" data-style="guard" aria-pressed="false">
+                <span class="avatar-token avatar-guard" aria-hidden="true">
+                  <span class="avatar-head"></span>
+                  <span class="avatar-body"></span>
+                </span>
+                <span>Gate Guard</span>
+              </button>
+              <button class="avatar-option" type="button" data-style="star" aria-pressed="false">
+                <span class="avatar-token avatar-star" aria-hidden="true">
+                  <span class="avatar-head"></span>
+                  <span class="avatar-body"></span>
+                </span>
+                <span>Star Mage</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="creator-preview" aria-label="Hero preview">
+            <div class="preview-stage">
+              <div class="avatar-token avatar-trail avatar-large" id="heroPreview" aria-hidden="true">
+                <span class="avatar-head"></span>
+                <span class="avatar-body"></span>
+              </div>
+            </div>
+            <div>
+              <h2 id="previewName">Player One</h2>
+              <p id="previewStyle">Trail Scout</p>
+            </div>
+            <button class="primary-button" type="submit">Start Adventure</button>
+          </section>
+        </form>
+      </section>
+
+      <section class="game-view screen" id="gameScreen" aria-label="Game screen" hidden>
         <header class="topbar">
           <div>
             <p class="eyebrow">RPG collaboration starter</p>
             <h1>Shared Quest</h1>
           </div>
-          <div class="status-pill" id="locationLabel">Meadow Village</div>
+          <div class="top-actions">
+            <div class="status-pill" id="heroLabel">Player One</div>
+            <div class="status-pill" id="locationLabel">Meadow Village</div>
+            <button class="secondary-button compact-button" type="button" id="mainMenuButton">Menu</button>
+          </div>
         </header>
 
         <section class="play-area">
@@ -64,4 +144,3 @@
     <script src="src/main.js"></script>
   </body>
 </html>
-

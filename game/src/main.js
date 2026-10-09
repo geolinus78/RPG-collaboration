@@ -3,22 +3,89 @@
   var dialogue = window.GAME_DIALOGUE;
   var quests = window.GAME_QUESTS;
 
-  var state = {
-    mapId: world.start.mapId,
-    x: world.start.x,
-    y: world.start.y,
-    inventory: [],
-    collected: {},
-    flags: {},
-    message: "Find Riley and look for the Moon Key."
+  var heroStyles = {
+    trail: "Trail Scout",
+    guard: "Gate Guard",
+    star: "Star Mage"
   };
 
+  var selectedStyle = "trail";
+
+  function createInitialState(hero) {
+    var heroName = hero && hero.name ? hero.name : "Player One";
+    var heroStyle = hero && hero.style ? hero.style : "trail";
+
+    return {
+      mapId: world.start.mapId,
+      x: world.start.x,
+      y: world.start.y,
+      inventory: [],
+      collected: {},
+      flags: {},
+      hero: {
+        name: heroName,
+        style: heroStyle
+      },
+      message: "Welcome, " + heroName + ". Find Riley and look for the Moon Key."
+    };
+  }
+
+  var state = createInitialState();
+
+  var menuScreen = document.getElementById("menuScreen");
+  var creatorScreen = document.getElementById("creatorScreen");
+  var gameScreen = document.getElementById("gameScreen");
+  var newGameButton = document.getElementById("newGameButton");
+  var creatorButton = document.getElementById("creatorButton");
+  var creatorBackButton = document.getElementById("creatorBackButton");
+  var characterForm = document.getElementById("characterForm");
+  var heroNameInput = document.getElementById("heroName");
+  var heroPreview = document.getElementById("heroPreview");
+  var previewName = document.getElementById("previewName");
+  var previewStyle = document.getElementById("previewStyle");
+  var avatarOptions = document.getElementById("avatarOptions");
   var mapEl = document.getElementById("map");
+  var heroLabel = document.getElementById("heroLabel");
   var locationLabel = document.getElementById("locationLabel");
   var messageEl = document.getElementById("message");
   var inventoryEl = document.getElementById("inventory");
   var questListEl = document.getElementById("questList");
   var interactButton = document.getElementById("interactButton");
+  var mainMenuButton = document.getElementById("mainMenuButton");
+
+  function showScreen(screen) {
+    menuScreen.hidden = screen !== "menu";
+    creatorScreen.hidden = screen !== "creator";
+    gameScreen.hidden = screen !== "game";
+  }
+
+  function heroNameFromInput() {
+    var name = heroNameInput.value.trim();
+    return name || "Player One";
+  }
+
+  function updateCreatorPreview() {
+    var styleName = heroStyles[selectedStyle] || heroStyles.trail;
+
+    previewName.textContent = heroNameFromInput();
+    previewStyle.textContent = styleName;
+    heroPreview.className = "avatar-token avatar-" + selectedStyle + " avatar-large";
+  }
+
+  function createHeroToken(label) {
+    var token = document.createElement("div");
+    var head = document.createElement("span");
+    var body = document.createElement("span");
+
+    token.className = "avatar-token avatar-" + state.hero.style;
+    token.setAttribute("aria-label", label || state.hero.name);
+    head.className = "avatar-head";
+    body.className = "avatar-body";
+    token.appendChild(head);
+    token.appendChild(body);
+
+    return token;
+  }
 
   function currentMap() {
     return world.maps[state.mapId];
@@ -84,6 +151,7 @@
     mapEl.innerHTML = "";
     mapEl.style.gridTemplateColumns = "repeat(" + map.rows[0].length + ", 1fr)";
     mapEl.style.gridTemplateRows = "repeat(" + map.rows.length + ", 1fr)";
+    heroLabel.textContent = state.hero.name + " - " + (heroStyles[state.hero.style] || heroStyles.trail);
     locationLabel.textContent = map.name;
 
     for (var y = 0; y < map.rows.length; y += 1) {
@@ -102,7 +170,8 @@
         if (state.x === x && state.y === y) {
           cell.classList.add("player-here");
           cell.innerHTML = "";
-          cell.appendChild(sprite("player", "Player"));
+          cell.setAttribute("aria-label", state.hero.name);
+          cell.appendChild(createHeroToken(state.hero.name));
         }
 
         mapEl.appendChild(cell);
@@ -212,6 +281,15 @@
     }
   }
 
+  function startAdventure() {
+    state = createInitialState({
+      name: heroNameFromInput(),
+      style: selectedStyle
+    });
+    render();
+    showScreen("game");
+  }
+
   function tryMove(dx, dy) {
     var nextX = state.x + dx;
     var nextY = state.y + dy;
@@ -259,7 +337,56 @@
     interactWith(nearbyFeature());
   });
 
+  newGameButton.addEventListener("click", function () {
+    heroNameInput.value = "Player One";
+    selectedStyle = "trail";
+    selectAvatarOption(selectedStyle);
+    updateCreatorPreview();
+    showScreen("creator");
+  });
+
+  creatorButton.addEventListener("click", function () {
+    updateCreatorPreview();
+    showScreen("creator");
+  });
+
+  creatorBackButton.addEventListener("click", function () {
+    showScreen("menu");
+  });
+
+  mainMenuButton.addEventListener("click", function () {
+    showScreen("menu");
+  });
+
+  characterForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    startAdventure();
+  });
+
+  heroNameInput.addEventListener("input", updateCreatorPreview);
+
+  function selectAvatarOption(style) {
+    selectedStyle = style;
+
+    avatarOptions.querySelectorAll(".avatar-option").forEach(function (button) {
+      var isSelected = button.dataset.style === selectedStyle;
+      button.classList.toggle("selected", isSelected);
+      button.setAttribute("aria-pressed", String(isSelected));
+    });
+  }
+
+  avatarOptions.querySelectorAll(".avatar-option").forEach(function (button) {
+    button.addEventListener("click", function () {
+      selectAvatarOption(button.dataset.style);
+      updateCreatorPreview();
+    });
+  });
+
   document.addEventListener("keydown", function (event) {
+    if (gameScreen.hidden) {
+      return;
+    }
+
     var moves = {
       ArrowUp: [0, -1],
       w: [0, -1],
@@ -286,6 +413,6 @@
     }
   });
 
+  updateCreatorPreview();
   render();
 })();
-
