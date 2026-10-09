@@ -7,7 +7,7 @@ This workspace is for a shared browser RPG that kids can build together from dif
 1. Open `game/index.html`.
 2. Choose **New Game**.
 3. Name your hero and pick a hero style.
-4. Move with arrow keys, WASD, or the direction buttons.
+4. Move with arrow keys or WASD. Press Space or Enter to interact.
 5. Pick a team role from `docs/roles.md`.
 6. Edit only your team's files unless everyone agrees.
 7. Test the game after every small change.

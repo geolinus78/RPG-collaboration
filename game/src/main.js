@@ -50,7 +50,6 @@
   var messageEl = document.getElementById("message");
   var inventoryEl = document.getElementById("inventory");
   var questListEl = document.getElementById("questList");
-  var interactButton = document.getElementById("interactButton");
   var mainMenuButton = document.getElementById("mainMenuButton");
 
   function showScreen(screen) {
@@ -326,17 +325,6 @@
     render();
   }
 
-  document.querySelectorAll("[data-move]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      var parts = button.dataset.move.split(",").map(Number);
-      tryMove(parts[0], parts[1]);
-    });
-  });
-
-  interactButton.addEventListener("click", function () {
-    interactWith(nearbyFeature());
-  });
-
   newGameButton.addEventListener("click", function () {
     heroNameInput.value = "Player One";
     selectedStyle = "trail";
@@ -384,6 +372,10 @@
 
   document.addEventListener("keydown", function (event) {
     if (gameScreen.hidden) {
+      return;
+    }
+
+    if (event.target.tagName === "BUTTON" || event.target.tagName === "INPUT") {
       return;
     }
 
