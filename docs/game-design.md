@@ -6,30 +6,29 @@ Shared Quest
 
 ## Game Pitch
 
-Players explore a small forest village, talk to characters, collect useful items, and open new paths by completing quests.
+Players explore a newly discovered archipelago, visit themed islands, collect useful tools, and map safe routes for future explorers.
 
 ## Starter Story
 
-The village gate is locked. Riley knows a clue. The Moon Key is hidden nearby. Once the player finds the key, the gate opens.
+A legendary archipelago has been found again. The previous explorers never came back, so the player starts at the harbor, finds the Old Compass, and opens a safe route through the fog.
 
 ## World Rules
 
-- Trees block movement.
-- Water blocks movement.
+- The ocean and sea routes can be traveled.
+- Mountain cliffs can block movement.
 - Items can be collected.
-- Gates can require an item.
+- Fog gates can require an item.
 - NPCs can give hints.
 
 ## Ideas To Add Later
 
-- A second map beyond the gate
-- A shop
-- A pet companion
+- One designed island per kid or pair
+- A shop or harbor camp
+- Animal encounters for each island theme
 - Puzzle tiles
-- A boss that can be solved by kindness or cleverness
+- A mystery about the missing previous explorers
 - Music for each area
 
 ## Design Promise
 
 Every new feature should make the game easier to understand, more fun to explore, or more expressive for the kids building it.
-

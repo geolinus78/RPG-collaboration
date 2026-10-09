@@ -1,13 +1,13 @@
 # RPG Collaboration Workspace
 
-This workspace is for a shared browser RPG that kids can build together from different computers. The starter game runs without installing anything: open `game/index.html` in a web browser.
+This workspace is for a shared browser RPG that kids can build together from different computers. The starter game now uses a compact side-panel layout and an archipelago map inspired by the planning photos. It runs without installing anything: open `game/index.html` in a web browser.
 
 ## Quick Start
 
 1. Open `game/index.html`.
 2. Choose **New Game**.
 3. Name your hero and pick a hero style.
-4. Move with arrow keys or WASD. Press Space or Enter to interact.
+4. Move around the archipelago with arrow keys or WASD. Press Space or Enter to interact.
 5. Pick a team role from `docs/roles.md`.
 6. Edit only your team's files unless everyone agrees.
 7. Test the game after every small change.

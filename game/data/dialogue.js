@@ -1,18 +1,22 @@
 // Story team: edit this file to write character lines and signs.
 window.GAME_DIALOGUE = {
-  welcome_sign: [
-    "Welcome to Meadow Village.",
-    "Tip: talk to Riley, then search near the path."
+  harbor_notes: [
+    "Harbor Notes: A new archipelago has been discovered from an old legend.",
+    "Choose a route, map the islands, and find out why the previous explorers never came back."
   ],
 
-  riley_intro: [
-    "Riley: The north gate has been stuck all morning.",
-    "Riley: I saw a small silver key near the east path. It glowed like the moon."
+  mira_warning: [
+    "Mira: The mountain island is quiet, but not empty.",
+    "Mira: The last crew crossed the fog without a compass. Their campfire was found cold."
   ],
 
-  workshop_note: [
-    "The workshop table is covered in maps, paint, and quest ideas.",
-    "Someone wrote: Every great game starts as a tiny playable scene."
+  windcurve_note: [
+    "Windcurve Island: A windy green island for the first explorer's design.",
+    "Its beaches are safe, but the forest keeps moving when no one looks."
+  ],
+
+  cloudhook_note: [
+    "Cloudhook Island: Mist gathers around the cliffs.",
+    "This is a good place for another player to design climate, animals, and characters."
   ]
 };
-

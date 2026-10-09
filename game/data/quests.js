@@ -1,23 +1,22 @@
 // Quest team: edit this file to change goals and checklist steps.
 window.GAME_QUESTS = [
   {
-    id: "open_gate",
-    title: "Open the North Gate",
-    summary: "Find the Moon Key and unlock the gate.",
+    id: "map_archipelago",
+    title: "Map the Archipelago",
+    summary: "Find the old compass and open the southern fog route.",
     steps: [
       {
-        text: "Find the Moon Key.",
+        text: "Find the Old Compass.",
         condition: {
-          inventoryIncludes: "moonKey"
+          inventoryIncludes: "oldCompass"
         }
       },
       {
-        text: "Open the North Gate.",
+        text: "Open the Fog Gate.",
         condition: {
-          flag: "gateOpen"
+          flag: "fogGateOpen"
         }
       }
     ]
   }
 ];
-

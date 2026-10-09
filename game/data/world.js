@@ -1,99 +1,126 @@
 // Map team: edit this file to change rooms, tiles, items, and NPC positions.
 window.GAME_WORLD = {
   start: {
-    mapId: "meadow",
-    x: 4,
-    y: 4
+    mapId: "archipelago",
+    x: 6,
+    y: 5
   },
 
   tiles: {
-    ".": {
-      name: "grass",
-      sprite: "grass",
+    "~": {
+      name: "open sea",
+      sprite: "ocean",
       blocked: false
     },
     "=": {
-      name: "path",
-      sprite: "path",
+      name: "sea route",
+      sprite: "route",
       blocked: false
     },
-    "#": {
-      name: "trees",
-      sprite: "tree",
-      blocked: true,
-      bumpMessage: "The trees are too thick to walk through."
+    ".": {
+      name: "island shore",
+      sprite: "shore",
+      blocked: false
     },
-    "~": {
-      name: "water",
-      sprite: "water",
+    "j": {
+      name: "jungle island",
+      sprite: "jungle",
+      blocked: false
+    },
+    "c": {
+      name: "cloud island",
+      sprite: "cloud",
+      blocked: false
+    },
+    "r": {
+      name: "ruins",
+      sprite: "ruins",
+      blocked: false
+    },
+    "m": {
+      name: "mountains",
+      sprite: "mountain",
       blocked: true,
-      bumpMessage: "The stream is too deep here."
+      bumpMessage: "The mountain cliffs are too steep from this side."
     }
   },
 
   maps: {
-    meadow: {
-      name: "Meadow Village",
+    archipelago: {
+      name: "New Archipelago",
       rows: [
-        "#########",
-        "#...=...#",
-        "#..===..#",
-        "#...=...#",
-        "#...=...#",
-        "#..~~~..#",
-        "#...=...#",
-        "#.......#",
-        "#########"
+        "~~~~~~~~~~~~~",
+        "~~...~~~...~~",
+        "~..j.~~.c..~~",
+        "~~...~~~...~~",
+        "~~~~~===~~~~~",
+        "~...~~=~~...~",
+        "~.r.~~=~~m.~~",
+        "~...~~=~~...~",
+        "~~~~~===~~~~~",
+        "~~....~....~~",
+        "~..m..~..j..~",
+        "~~....~....~~",
+        "~~~~~~~~~~~~~"
       ],
       features: [
         {
-          id: "sign_welcome",
+          id: "harbor_notes",
           type: "sign",
-          x: 4,
-          y: 1,
-          name: "Welcome Sign",
-          sprite: "sign",
-          dialogueId: "welcome_sign"
-        },
-        {
-          id: "riley",
-          type: "npc",
-          x: 2,
-          y: 2,
-          name: "Riley",
-          sprite: "npc",
-          dialogueId: "riley_intro"
-        },
-        {
-          id: "moon_key",
-          type: "item",
           x: 6,
-          y: 2,
-          name: "Moon Key",
-          itemId: "moonKey",
-          sprite: "key",
-          pickupText: "You found the Moon Key. The gate might open now."
+          y: 5,
+          name: "Harbor Notes",
+          sprite: "sign",
+          dialogueId: "harbor_notes"
         },
         {
-          id: "home",
-          type: "sign",
-          x: 4,
-          y: 3,
-          name: "Workshop",
-          sprite: "home",
-          dialogueId: "workshop_note"
-        },
-        {
-          id: "north_gate",
-          type: "gate",
-          x: 4,
+          id: "mira",
+          type: "npc",
+          x: 10,
           y: 6,
-          name: "North Gate",
+          name: "Mira",
+          sprite: "npc",
+          dialogueId: "mira_warning"
+        },
+        {
+          id: "old_compass",
+          type: "item",
+          x: 2,
+          y: 6,
+          name: "Old Compass",
+          itemId: "oldCompass",
+          sprite: "key",
+          pickupText: "You found an old compass. It points through the fog instead of north."
+        },
+        {
+          id: "windcurve_island",
+          type: "sign",
+          x: 3,
+          y: 2,
+          name: "Windcurve Island",
+          sprite: "home",
+          dialogueId: "windcurve_note"
+        },
+        {
+          id: "cloudhook_island",
+          type: "sign",
+          x: 9,
+          y: 2,
+          name: "Cloudhook Island",
+          sprite: "sign",
+          dialogueId: "cloudhook_note"
+        },
+        {
+          id: "fog_gate",
+          type: "gate",
+          x: 6,
+          y: 8,
+          name: "Fog Gate",
           sprite: "gate",
-          requiresItem: "moonKey",
-          flag: "gateOpen",
-          lockedText: "The gate is locked. A moon-shaped keyhole shines on the handle.",
-          openText: "The Moon Key turns. The gate opens with a bright click."
+          requiresItem: "oldCompass",
+          flag: "fogGateOpen",
+          lockedText: "A wall of fog blocks the southern route. The old stories say only a true compass can find the way.",
+          openText: "The old compass spins, then steadies. A safe route opens through the fog."
         }
       ]
     }

@@ -26,7 +26,7 @@
         name: heroName,
         style: heroStyle
       },
-      message: "Welcome, " + heroName + ". Find Riley and look for the Moon Key."
+      message: "Welcome, " + heroName + ". Start from the harbor and map the islands."
     };
   }
 
@@ -131,6 +131,14 @@
     return state.inventory.indexOf(itemId) !== -1;
   }
 
+  function itemName(itemId) {
+    var names = {
+      oldCompass: "Old Compass"
+    };
+
+    return names[itemId] || itemId;
+  }
+
   function setMessage(text) {
     state.message = text;
     messageEl.textContent = text;
@@ -183,7 +191,7 @@
 
     state.inventory.forEach(function (itemId) {
       var item = document.createElement("li");
-      item.textContent = itemId === "moonKey" ? "Moon Key" : itemId;
+      item.textContent = itemName(itemId);
       inventoryEl.appendChild(item);
     });
   }
