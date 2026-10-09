@@ -1,0 +1,265 @@
+:root {
+  --ink: #172026;
+  --muted: #52606d;
+  --paper: #f7f3e8;
+  --panel: #fffaf0;
+  --line: #d9c9a3;
+  --grass: #9ecf8a;
+  --grass-dark: #6da35d;
+  --water: #67b8d8;
+  --tree: #2f6b45;
+  --path: #d7b36a;
+  --accent: #b54632;
+  --focus: #164e9e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  background:
+    linear-gradient(135deg, rgba(245, 222, 150, 0.42), rgba(123, 183, 196, 0.3)),
+    var(--paper);
+}
+
+button {
+  font: inherit;
+}
+
+.shell {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.game-view {
+  display: grid;
+  gap: 18px;
+}
+
+.topbar {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: clamp(2rem, 6vw, 4.8rem);
+  line-height: 0.95;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.status-pill {
+  flex: 0 0 auto;
+  max-width: 42vw;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--muted);
+  text-align: right;
+}
+
+.play-area {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(240px, 320px);
+  gap: 18px;
+  align-items: start;
+}
+
+.map-wrap {
+  width: 100%;
+  overflow: auto;
+}
+
+.map {
+  display: grid;
+  width: min(100%, 720px);
+  aspect-ratio: 1;
+  border: 3px solid #5c412d;
+  background: #5c412d;
+  box-shadow: 0 14px 28px rgba(23, 32, 38, 0.18);
+}
+
+.tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid rgba(23, 32, 38, 0.16);
+}
+
+.tile-grass {
+  background: linear-gradient(135deg, var(--grass), #cfe7a0);
+}
+
+.tile-path {
+  background: linear-gradient(135deg, var(--path), #ead08d);
+}
+
+.tile-tree {
+  background: linear-gradient(135deg, var(--tree), #41845b);
+}
+
+.tile-water {
+  background: linear-gradient(135deg, var(--water), #9ed8ef);
+}
+
+.sprite {
+  width: 76%;
+  height: 76%;
+  object-fit: contain;
+  image-rendering: auto;
+  pointer-events: none;
+}
+
+.player-here {
+  outline: 3px solid var(--accent);
+  outline-offset: -5px;
+}
+
+.side-panel {
+  display: grid;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 250, 240, 0.9);
+}
+
+.quest-list {
+  display: grid;
+  gap: 8px;
+}
+
+.quest {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffdf7;
+}
+
+.quest-title {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.quest-step,
+.inventory li {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.quest-step.done {
+  color: #2f6b45;
+  text-decoration: line-through;
+}
+
+.inventory {
+  display: grid;
+  gap: 6px;
+  min-height: 32px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.inventory:empty::before {
+  content: "Empty";
+  color: var(--muted);
+}
+
+.message {
+  min-height: 4.2em;
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(54px, 90px));
+  gap: 10px;
+  justify-content: center;
+}
+
+.icon-button,
+.action-button {
+  min-height: 48px;
+  border: 2px solid #5c412d;
+  border-radius: 8px;
+  background: #fffdf7;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.icon-button {
+  aspect-ratio: 1;
+  font-weight: 700;
+}
+
+.action-button {
+  padding: 0 16px;
+  font-weight: 700;
+}
+
+.icon-button:hover,
+.action-button:hover,
+.icon-button:focus-visible,
+.action-button:focus-visible {
+  border-color: var(--focus);
+  outline: 3px solid rgba(22, 78, 158, 0.24);
+}
+
+@media (max-width: 820px) {
+  .shell {
+    padding: 16px;
+  }
+
+  .topbar,
+  .play-area {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar {
+    display: grid;
+    align-items: start;
+  }
+
+  .status-pill {
+    max-width: none;
+    text-align: left;
+  }
+
+  .controls {
+    grid-template-columns: repeat(5, minmax(44px, 1fr));
+  }
+}
+

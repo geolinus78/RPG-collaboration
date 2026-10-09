@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="NPC">
+  <rect width="64" height="64" rx="10" fill="#f4e3b1"/>
+  <circle cx="32" cy="21" r="10" fill="#9a6841"/>
+  <path d="M16 56c3-15 9-24 16-24s13 9 16 24z" fill="#b54632"/>
+  <path d="M22 16c6-8 16-8 22 0-4-2-8-1-12 2-4-3-7-4-10-2z" fill="#3c2b1f"/>
+  <circle cx="28" cy="21" r="2" fill="#172026"/>
+  <circle cx="36" cy="21" r="2" fill="#172026"/>
+</svg>
+

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shared Quest</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="game-view" aria-label="Game screen">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">RPG collaboration starter</p>
+            <h1>Shared Quest</h1>
+          </div>
+          <div class="status-pill" id="locationLabel">Meadow Village</div>
+        </header>
+
+        <section class="play-area">
+          <div class="map-wrap">
+            <div id="map" class="map" aria-label="Game map"></div>
+          </div>
+
+          <aside class="side-panel" aria-label="Player information">
+            <section>
+              <h2>Quest</h2>
+              <div id="questList" class="quest-list"></div>
+            </section>
+
+            <section>
+              <h2>Inventory</h2>
+              <ul id="inventory" class="inventory"></ul>
+            </section>
+
+            <section>
+              <h2>Message</h2>
+              <p id="message" class="message">Find Riley and look for the Moon Key.</p>
+            </section>
+          </aside>
+        </section>
+
+        <section class="controls" aria-label="Controls">
+          <button class="icon-button" type="button" data-move="0,-1" aria-label="Move up" title="Move up">
+            <span aria-hidden="true">N</span>
+          </button>
+          <button class="icon-button" type="button" data-move="-1,0" aria-label="Move left" title="Move left">
+            <span aria-hidden="true">W</span>
+          </button>
+          <button class="action-button" type="button" id="interactButton">Interact</button>
+          <button class="icon-button" type="button" data-move="1,0" aria-label="Move right" title="Move right">
+            <span aria-hidden="true">E</span>
+          </button>
+          <button class="icon-button" type="button" data-move="0,1" aria-label="Move down" title="Move down">
+            <span aria-hidden="true">S</span>
+          </button>
+        </section>
+      </section>
+    </main>
+
+    <script src="data/world.js"></script>
+    <script src="data/dialogue.js"></script>
+    <script src="data/quests.js"></script>
+    <script src="src/main.js"></script>
+  </body>
+</html>
+
