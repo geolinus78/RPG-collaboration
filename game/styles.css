@@ -366,14 +366,15 @@ input {
 
 .game-view {
   display: grid;
-  gap: 18px;
+  gap: 10px;
+  align-content: start;
 }
 
 .topbar {
   display: grid;
   align-items: start;
-  gap: 16px;
-  padding-bottom: 12px;
+  gap: 8px;
+  padding-bottom: 8px;
   border-bottom: 2px solid var(--line);
 }
 
@@ -393,7 +394,7 @@ p {
 
 h1 {
   margin-bottom: 0;
-  font-size: clamp(2rem, 12vw, 3rem);
+  font-size: clamp(2rem, 10vw, 2.6rem);
   line-height: 0.95;
 }
 
@@ -405,24 +406,25 @@ h2 {
 .status-pill {
   flex: 0 0 auto;
   max-width: none;
-  padding: 8px 12px;
+  padding: 6px 9px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
   color: var(--muted);
+  font-size: 0.86rem;
   text-align: right;
 }
 
 .play-area {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
   align-items: start;
 }
 
 .map-wrap {
+  position: relative;
   width: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .map {
@@ -528,35 +530,58 @@ h2 {
   outline-offset: -5px;
 }
 
-.side-panel {
+.hud-panel {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
   display: grid;
-  gap: 14px;
-  padding: 16px;
-  border: 1px solid var(--line);
+  gap: 6px;
+  padding: 9px 10px;
+  border: 1px solid rgba(92, 65, 45, 0.36);
   border-radius: 8px;
   background: rgba(255, 250, 240, 0.9);
+  box-shadow: 0 10px 22px rgba(23, 32, 38, 0.18);
+}
+
+.hud-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.hud-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .quest-list {
   display: grid;
-  gap: 8px;
+  min-width: 0;
 }
 
 .quest {
-  padding: 10px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fffdf7;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
 }
 
 .quest-title {
-  margin-bottom: 6px;
+  margin-bottom: 0;
+  overflow: hidden;
+  font-size: 0.82rem;
   font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .quest-step,
 .inventory li {
   color: var(--muted);
+  font-size: 0.8rem;
   line-height: 1.35;
 }
 
@@ -566,22 +591,25 @@ h2 {
 }
 
 .inventory {
-  display: grid;
-  gap: 6px;
-  min-height: 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-height: 0;
   margin: 0;
-  padding-left: 18px;
+  padding-left: 0;
+  list-style: none;
 }
 
 .inventory:empty::before {
   content: "Empty";
   color: var(--muted);
+  font-size: 0.8rem;
 }
 
 .message {
-  min-height: 4.2em;
   margin-bottom: 0;
   color: var(--muted);
+  font-size: 0.82rem;
   line-height: 1.4;
 }
 

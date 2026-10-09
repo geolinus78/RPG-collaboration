@@ -212,23 +212,25 @@
     questListEl.innerHTML = "";
 
     quests.forEach(function (quest) {
-      var questEl = document.createElement("article");
+      var questEl = document.createElement("div");
+      var currentStep = quest.steps.find(function (step) {
+        return !stepComplete(step.condition);
+      });
+      var title = document.createElement("span");
+      var stepEl = document.createElement("span");
+
       questEl.className = "quest";
 
-      var title = document.createElement("div");
       title.className = "quest-title";
       title.textContent = quest.title;
       questEl.appendChild(title);
 
-      quest.steps.forEach(function (step) {
-        var stepEl = document.createElement("div");
-        stepEl.className = "quest-step";
-        if (stepComplete(step.condition)) {
-          stepEl.classList.add("done");
-        }
-        stepEl.textContent = step.text;
-        questEl.appendChild(stepEl);
-      });
+      stepEl.className = "quest-step";
+      stepEl.textContent = currentStep ? currentStep.text : "Complete.";
+      if (!currentStep) {
+        stepEl.classList.add("done");
+      }
+      questEl.appendChild(stepEl);
 
       questListEl.appendChild(questEl);
     });

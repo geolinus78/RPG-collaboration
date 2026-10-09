@@ -100,24 +100,19 @@
         <section class="play-area">
           <div class="map-wrap">
             <div id="map" class="map" aria-label="Game map"></div>
+
+            <aside class="hud-panel" aria-label="Game status">
+              <div class="hud-row">
+                <span class="hud-label">Goal</span>
+                <div id="questList" class="quest-list"></div>
+              </div>
+              <div class="hud-row">
+                <span class="hud-label">Pack</span>
+                <ul id="inventory" class="inventory"></ul>
+              </div>
+              <p id="message" class="message">Start from the harbor and map the islands.</p>
+            </aside>
           </div>
-
-          <aside class="side-panel" aria-label="Player information">
-            <section>
-              <h2>Quest</h2>
-              <div id="questList" class="quest-list"></div>
-            </section>
-
-            <section>
-              <h2>Inventory</h2>
-              <ul id="inventory" class="inventory"></ul>
-            </section>
-
-            <section>
-              <h2>Message</h2>
-              <p id="message" class="message">Find Riley and look for the Moon Key.</p>
-            </section>
-          </aside>
         </section>
       </section>
     </main>
