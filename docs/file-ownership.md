@@ -1,28 +1,11 @@
-# File Ownership Guide
+# File Ownership
 
-This file helps teams avoid conflicts.
-
-## Safest Split
-
-| Kid or team | Edit these files |
+| Person | Their editable file |
 | --- | --- |
-| Story | `game/data/dialogue.js` |
-| Map | `game/data/world.js` |
-| Quest | `game/data/quests.js` |
-| Art | `game/assets/art/*.svg` |
-| Sound | `game/assets/audio/README.md` or audio files |
-| Code | `game/src/main.js`, `game/styles.css` |
+| Kid One | `game/islands/kid-one-island.js` |
+| Kid Two | `game/islands/kid-two-island.js` |
+| Kid Three | `game/islands/kid-three-island.js` |
 
-## Shared Files
+The adult integrator owns shared files including `game/islands/island-registry.js`, `game/islands/island-schema.js`, `game/src/`, `game/index.html`, and `game/styles.css`.
 
-These files should be edited with the whole group or by the session lead:
-
-- `README.md`
-- `CONTRIBUTING.md`
-- `TEAM_BOARD.md`
-- `docs/game-design.md`
-
-## Rule Of Thumb
-
-If a file has someone else's name on the task board, ask before editing it.
-
+The three kid files are already imported by the registry. A child should never need to edit a shared file to make their island appear.

@@ -1,34 +1,22 @@
 # Game Design Notes
 
-## Working Title
-
-Shared Quest
-
 ## Game Pitch
 
-Players explore a newly discovered archipelago, visit themed islands, collect useful tools, and map safe routes for future explorers.
+Players begin at the Harbor of Legends and travel among three themed 3D islands. Each island has its own terrain, climate, wildlife, structures, goal, and clue about the missing explorers.
 
-## Starter Story
+## World Structure
 
-A legendary archipelago has been found again. The previous explorers never came back, so the player starts at the harbor, finds the Old Compass, and opens a safe route through the fog.
+- The harbor is the shared starting world.
+- Windcurve, Cloudhook, and Emberpeak each belong to one child designer.
+- The island tabs are the archipelago navigation map.
+- WASD or arrow keys move the hero.
+- E or Space explores a nearby landmark.
+- Water marks the playable boundary of each world.
 
-## World Rules
+## Story Thread
 
-- The ocean and sea routes can be traveled.
-- Mountain cliffs can block movement.
-- Items can be collected.
-- Fog gates can require an item.
-- NPCs can give hints.
-
-## Ideas To Add Later
-
-- One designed island per kid or pair
-- A shop or harbor camp
-- Animal encounters for each island theme
-- Puzzle tiles
-- A mystery about the missing previous explorers
-- Music for each area
+The previous expedition disappeared while investigating a connection among the islands. Each child's story and landmarks reveal one part of the mystery. The exact explanation can change as the team combines its ideas.
 
 ## Design Promise
 
-Every new feature should make the game easier to understand, more fun to explore, or more expressive for the kids building it.
+Each child controls a whole expressive world without needing to change shared engine code. New shared features should make the islands easier to design, richer to explore, or safer to merge.

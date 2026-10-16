@@ -1,49 +1,26 @@
 # Collaboration Rules
 
-These rules keep the project fun and prevent one person's work from overwriting another person's work.
+## One Island, One Owner
 
-## One Job At A Time
+Each child edits only their assigned `game/islands/kid-*-island.js` file. The shared engine, registry, HTML, and CSS belong to the adult integration branch unless the group agrees otherwise.
 
-Before editing, claim a task in `TEAM_BOARD.md`. Write your name beside it and keep the change small.
+## Before Sharing
 
-Good task sizes:
+1. Pull `main` before creating a new branch.
+2. Make a small change and save it.
+3. Run `node scripts/validate-islands.mjs`.
+4. Run the game and visit the changed island.
+5. Commit only the assigned island file.
+6. Push the branch and tell the adult its name.
 
-- Add one NPC.
-- Change one character's dialogue.
-- Draw one replacement art file.
-- Add one quest step.
-- Fix one bug.
-
-## Stay In Your Area
-
-| Team | Main files |
-| --- | --- |
-| Story | `game/data/dialogue.js` |
-| Map | `game/data/world.js` |
-| Quest | `game/data/quests.js` |
-| Art | `game/assets/art/` |
-| Sound | `game/assets/audio/` |
-| Code | `game/src/main.js`, `game/styles.css` |
-
-Ask before editing another team's file.
-
-## Before Sharing Your Work
-
-1. Open `game/index.html`.
-2. Try the part you changed.
-3. Check that the game still starts.
-4. Write a short commit message.
-
-Commit message examples:
+Good commit messages describe the visible result:
 
 ```text
-Add Sage Mira dialogue
-Move Moon Key near the bridge
-Draw new player sprite
-Fix locked gate message
+Turn Windcurve into a giant flower forest
+Add the Cloud Bell mystery
+Build Emberpeak crystal village
 ```
 
-## Handling Conflicts
+## Conflict Rule
 
-If two people changed the same file, stop and ask an adult or the team lead to help merge the changes. Do not delete someone else's work to make your version fit.
-
+If Git reports a conflict, stop and ask the adult integrating the islands. Do not remove another person's work to make the warning disappear.

@@ -1,34 +1,25 @@
 # Collaboration Session Plan
 
-Use this for a 45 to 60 minute group session.
-
 ## 1. Start Together
 
-- Open the game.
-- Play for 2 minutes.
-- Pick today's goal.
-- Choose roles.
+- Pull the latest `main` branch.
+- Run the validator and play all island tabs.
+- Each child creates or switches to their own island branch.
 
-## 2. Claim Tasks
+## 2. Design Separately
 
-- Each kid or pair writes their name in `TEAM_BOARD.md`.
-- Everyone says which file they will edit.
+- Paste the matching prompt from `KID-ISLAND-PROMPTS.md` into Codex.
+- Edit only the assigned island file.
+- Test after every few changes.
 
-## 3. Build In Small Pieces
+## 3. Share
 
-- Work for 15 to 20 minutes.
-- Test after each small change.
-- Ask before editing another team's file.
+- Run `node scripts/validate-islands.mjs`.
+- Commit only the assigned island file.
+- Push the branch and tell the adult its name.
 
-## 4. Share And Merge
+## 4. Merge Together
 
-- Each team shows what changed.
-- The group tests the game together.
-- Fix obvious mistakes.
-
-## 5. Wrap Up
-
-- Move finished tasks to Done.
-- Add new ideas to Ready.
-- Save, commit, or sync the folder.
-
+- The adult reviews and merges one island branch at a time.
+- Pull the updated `main` branch on every computer.
+- Visit every island for a final group playtest.

@@ -87,39 +87,47 @@
       <section class="game-view screen" id="gameScreen" aria-label="Game screen" hidden>
         <header class="topbar">
           <div>
-            <p class="eyebrow">RPG collaboration starter</p>
+            <p class="eyebrow" id="islandDesigner">Shared team</p>
             <h1>Shared Quest</h1>
           </div>
           <div class="top-actions">
             <div class="status-pill" id="heroLabel">Player One</div>
-            <div class="status-pill" id="locationLabel">Meadow Village</div>
+            <div class="status-pill" id="locationLabel">Harbor of Legends</div>
             <button class="secondary-button compact-button" type="button" id="mainMenuButton">Menu</button>
           </div>
         </header>
 
+        <nav class="island-tabs" id="islandTabs" aria-label="Choose an island"></nav>
+
         <section class="play-area">
-          <div class="map-wrap">
-            <div id="map" class="map" aria-label="Game map"></div>
+          <div class="world-stage" id="worldStage">
+            <canvas id="worldCanvas" aria-label="Playable 3D island world"></canvas>
+            <div class="world-loading" id="worldLoading">Building island...</div>
 
             <aside class="hud-panel" aria-label="Game status">
               <div class="hud-row">
-                <span class="hud-label">Goal</span>
-                <div id="questList" class="quest-list"></div>
+                <span class="hud-label">Island</span>
+                <div>
+                  <strong id="islandName">Harbor of Legends</strong>
+                  <span class="hud-detail" id="islandBiome">Sunlit harbor</span>
+                </div>
               </div>
               <div class="hud-row">
-                <span class="hud-label">Pack</span>
-                <ul id="inventory" class="inventory"></ul>
+                <span class="hud-label">Goal</span>
+                <span id="islandGoal">Visit each island.</span>
               </div>
-              <p id="message" class="message">Start from the harbor and map the islands.</p>
+              <p id="message" class="message">Use WASD or arrow keys to explore. Press E or Space near a landmark.</p>
             </aside>
+
+            <div class="control-hint" aria-hidden="true">
+              <span>WASD move</span>
+              <span>E explore</span>
+            </div>
           </div>
         </section>
       </section>
     </main>
 
-    <script src="data/world.js"></script>
-    <script src="data/dialogue.js"></script>
-    <script src="data/quests.js"></script>
-    <script src="src/main.js"></script>
+    <script type="module" src="src/main.js"></script>
   </body>
 </html>
