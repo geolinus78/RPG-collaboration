@@ -30,6 +30,7 @@ export class IslandWorld {
     this.scene.add(this.worldGroup);
     this.interactables = [];
     this.animatedObjects = [];
+    this.rescuedIslands = new Set();
     this.water = null;
     this.waterBasePositions = null;
     this.terrainHeight = () => 0;
@@ -121,6 +122,7 @@ export class IslandWorld {
     this.buildNature(island);
     this.buildLandmarks(island);
     this.buildCreatures(island);
+    this.buildRescue(island);
     this.buildClouds(island);
     this.buildPlayer(island);
 
@@ -367,6 +369,30 @@ export class IslandWorld {
     });
   }
 
+  buildRescue(island) {
+    const rescue = island.rescue;
+    const rescued = this.rescuedIslands.has(island.id);
+    const group = createRescuePerson(rescue, rescued);
+    const [x, z] = rescue.position;
+    group.position.set(x, this.terrainHeight(x, z), z);
+    group.userData.kind = "rescue";
+    group.userData.islandId = island.id;
+    group.userData.name = rescue.name;
+    group.userData.trappedMessage = rescue.trappedMessage;
+    group.userData.rescuedMessage = rescue.rescuedMessage;
+    group.userData.message = rescued
+      ? `${rescue.name} is safe and ready to help other explorers.`
+      : `${rescue.name}: ${rescue.trappedMessage}`;
+    group.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+    this.interactables.push(group);
+    this.worldGroup.add(group);
+  }
+
   buildClouds(island) {
     const cloudMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: 0.42, roughness: 1 });
     const random = seededRandom(island.terrain.seed + 3000);
@@ -481,12 +507,27 @@ export class IslandWorld {
       if (nearest.userData.kind === "boat") {
         this.keys.clear();
         this.onTravel();
+      } else if (nearest.userData.kind === "rescue") {
+        this.rescuePerson(nearest);
       } else {
         this.onMessage(nearest.userData.message);
       }
     } else {
       this.onMessage(this.currentIsland.story.goal);
     }
+  }
+
+  rescuePerson(person) {
+    if (this.rescuedIslands.has(person.userData.islandId)) {
+      this.onMessage(`${person.userData.name} is already safe.`);
+      return;
+    }
+
+    this.rescuedIslands.add(person.userData.islandId);
+    person.userData.cage.visible = false;
+    person.userData.marker.material.color.set("#77e08b");
+    person.userData.message = `${person.userData.name} is safe and ready to help other explorers.`;
+    this.onMessage(person.userData.rescuedMessage);
   }
 
   resize() {
@@ -690,6 +731,53 @@ function createCreature(creature) {
   group.traverse((child) => {
     if (child.isMesh) child.castShadow = true;
   });
+  return group;
+}
+
+function createRescuePerson(rescue, rescued) {
+  const group = new THREE.Group();
+  const cage = new THREE.Group();
+  const clothing = new THREE.MeshStandardMaterial({ color: rescue.color, roughness: 0.76 });
+  const skin = new THREE.MeshStandardMaterial({ color: "#f2c894", roughness: 0.82 });
+  const hair = new THREE.MeshStandardMaterial({ color: "#493426", roughness: 0.9 });
+  const metal = new THREE.MeshStandardMaterial({ color: "#535d63", roughness: 0.38, metalness: 0.72 });
+
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.55, 1.1, 5, 10), clothing);
+  body.position.y = 1.35;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.48, 14, 10), skin);
+  head.position.y = 2.55;
+  const hairCap = new THREE.Mesh(new THREE.SphereGeometry(0.5, 12, 8, 0, Math.PI * 2, 0, Math.PI * 0.55), hair);
+  hairCap.position.y = 2.72;
+  group.add(body, head, hairCap);
+
+  const barGeometry = new THREE.CylinderGeometry(0.1, 0.1, 4.4, 8);
+  [-1.45, -0.5, 0.5, 1.45].forEach((x) => {
+    [-1.15, 1.15].forEach((z) => {
+      const bar = new THREE.Mesh(barGeometry, metal);
+      bar.position.set(x, 2.2, z);
+      cage.add(bar);
+    });
+  });
+  [-1.15, 1.15].forEach((z) => {
+    const topRail = new THREE.Mesh(new THREE.BoxGeometry(3.1, 0.16, 0.16), metal);
+    topRail.position.set(0, 4.32, z);
+    cage.add(topRail);
+  });
+  const roof = new THREE.Mesh(new THREE.BoxGeometry(3.3, 0.16, 2.6), metal);
+  roof.position.y = 4.38;
+  cage.add(roof);
+  cage.visible = !rescued;
+  group.add(cage);
+
+  const marker = new THREE.Mesh(
+    new THREE.TorusGeometry(2.4, 0.1, 6, 48),
+    new THREE.MeshBasicMaterial({ color: rescued ? "#77e08b" : "#ff6b55", transparent: true, opacity: 0.9 })
+  );
+  marker.rotation.x = Math.PI / 2;
+  marker.position.y = 0.12;
+  group.add(marker);
+  group.userData.cage = cage;
+  group.userData.marker = marker;
   return group;
 }
 

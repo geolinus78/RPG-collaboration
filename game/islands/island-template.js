@@ -62,6 +62,14 @@ export default {
     { kind: "spirit", name: "Name This Creature", position: [7, 4], color: "#9fe9df" }
   ],
 
+  rescue: {
+    name: "Name This Explorer",
+    position: [-22, -12],
+    color: "#4f78bd",
+    trappedMessage: "Explain what has trapped this person.",
+    rescuedMessage: "Explain what happens when the player rescues them."
+  },
+
   story: {
     arrival: "What does the player notice when they arrive?",
     goal: "What should the player try to do?",

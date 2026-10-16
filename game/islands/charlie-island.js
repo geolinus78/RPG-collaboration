@@ -78,9 +78,17 @@ export default {
     { kind: "spirit", name: "Wind Wisp", position: [-4, -25], color: "#9fe9df" }
   ],
 
+  rescue: {
+    name: "Ranger Rowan",
+    position: [27, -18],
+    color: "#6db36b",
+    trappedMessage: "Ranger Rowan is held inside a cage tangled with wind-bent roots.",
+    rescuedMessage: "You free Ranger Rowan! The circling wind calms enough to reveal a new trail."
+  },
+
   story: {
     arrival: "The wind circles Charlie Island without ever blowing out to sea.",
-    goal: "Reach the Root Gate and learn how to calm the storm.",
+    goal: "Rescue Ranger Rowan and reach the Root Gate to calm the storm.",
     secret: "The previous explorers built the observatory to watch something beneath the trees."
   }
 };

@@ -76,9 +76,17 @@ export default {
     { kind: "fox", name: "Dock Fox", position: [18, 8], color: "#cf7044" }
   ],
 
+  rescue: {
+    name: "Captain Mira",
+    position: [20, -18],
+    color: "#4f78bd",
+    trappedMessage: "Captain Mira is locked inside a cage made from pieces of the missing ship.",
+    rescuedMessage: "You free Captain Mira! She promises to keep Emma Island's harbor safe."
+  },
+
   story: {
     arrival: "You arrive on Emma Island, where the Harbor of Legends is preparing an expedition.",
-    goal: "Explore Emma Island and find the explorer boat when you are ready to travel.",
+    goal: "Rescue Captain Mira, then find the explorer boat when you are ready to travel.",
     secret: "The broken ship carries a compass mark that matches all three islands."
   }
 };

@@ -78,9 +78,17 @@ export default {
     { kind: "crawler", name: "Pebble Walker", position: [-23, 18], color: "#8995a8" }
   ],
 
+  rescue: {
+    name: "Archivist Skye",
+    position: [-27, -16],
+    color: "#829fe4",
+    trappedMessage: "Archivist Skye is sealed inside a cage of humming cloud crystal.",
+    rescuedMessage: "You free Archivist Skye! She has memorized the missing expedition's sky map."
+  },
+
   story: {
     arrival: "Clouds flow over the cliffs of Finn Island like slow rivers.",
-    goal: "Ring the Cloud Bell and wake the Sleeping Star.",
+    goal: "Rescue Archivist Skye, ring the Cloud Bell, and wake the Sleeping Star.",
     secret: "The voices inside the crystal know the way to the final island."
   }
 };

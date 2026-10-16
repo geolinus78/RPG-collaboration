@@ -78,9 +78,17 @@ export default {
     { kind: "spirit", name: "Cinder Wisp", position: [13, -24], color: "#ff9a55" }
   ],
 
+  rescue: {
+    name: "Engineer Ash",
+    position: [28, 17],
+    color: "#d85f45",
+    trappedMessage: "Engineer Ash is trapped in a cage fused shut by glowing stone.",
+    rescuedMessage: "You free Engineer Ash! The final symbol on the Mountain Door begins to shine."
+  },
+
   story: {
     arrival: "The rocks of Neo Island glow beneath your boots, but no smoke rises from the peak.",
-    goal: "Light the final symbol on the Mountain Door.",
+    goal: "Rescue Engineer Ash and light the final symbol on the Mountain Door.",
     secret: "The explorers are alive behind the door, trapped between all three islands."
   }
 };

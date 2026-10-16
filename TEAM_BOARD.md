@@ -13,6 +13,7 @@
 - Island can be chosen at the start.
 - Player starts on land.
 - Landmarks can be reached and explored.
+- The trapped person can be found and rescued.
 - The boat can be found and opens the sailing menu.
 - No files belonging to another child changed.
 - Branch is pushed to GitHub.

@@ -30,6 +30,7 @@ Open [the kid island guide](docs/KID-ISLAND-GUIDE.md), then use the matching cop
 - Island shape, height, roughness, colors, lighting, fog, and wind
 - Numbers of trees, rocks, flowers, and crystals
 - Landmarks, creatures, names, messages, goals, and secrets
+- A named trapped person, their cage location, and their rescue message
 
 Check all islands before sharing work:
 

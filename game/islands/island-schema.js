@@ -102,6 +102,16 @@ export function validateIsland(island) {
     });
   }
 
+  if (!island.rescue || typeof island.rescue !== "object") {
+    errors.push("rescue must describe the person who needs help.");
+  } else {
+    requireText(island.rescue.name, "rescue.name", errors);
+    requireText(island.rescue.trappedMessage, "rescue.trappedMessage", errors);
+    requireText(island.rescue.rescuedMessage, "rescue.rescuedMessage", errors);
+    requireColor(island.rescue.color, "rescue.color", errors);
+    validatePosition(island.rescue.position, "rescue.position", errors);
+  }
+
   if (!island.story || typeof island.story !== "object") {
     errors.push("story must be an object.");
   } else {

@@ -42,7 +42,11 @@ Allowed landmark kinds are `boat`, `camp`, `crystal`, `gate`, `ruins`, `shipwrec
 
 Allowed creature kinds are `bird`, `crawler`, `fox`, and `spirit`.
 
-A position is `[x, z]`. Use values roughly from -20 to 20, with zero near the center. Keep `playerStart` and important places away from the extreme edge.
+A position is `[x, z]`. Use values roughly from -40 to 40, with zero near the center. Keep `playerStart` and important places away from the extreme edge.
+
+### Rescue person
+
+Every island must keep its `rescue` object. The child can change the person's `name`, `position`, clothing `color`, `trappedMessage`, and `rescuedMessage`. Put the person somewhere reachable but far enough from `playerStart` that finding them feels like an adventure.
 
 ## Check Your Work
 
@@ -52,4 +56,4 @@ Run:
 node scripts/validate-islands.mjs
 ```
 
-Then play your island. Walk to each landmark and press E, and make sure the boat opens the destination chooser. When it looks right, commit only your assigned island file and push your branch.
+Then play your island. Walk to each landmark and press E, rescue the trapped person, and make sure the boat opens the destination chooser. When it looks right, commit only your assigned island file and push your branch.
