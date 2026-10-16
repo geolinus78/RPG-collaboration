@@ -2,16 +2,17 @@
 
 ## Game Pitch
 
-Players begin at the Harbor of Legends and travel among three themed 3D islands. Each island has its own terrain, climate, wildlife, structures, goal, and clue about the missing explorers.
+Players choose a hero and a starting point, then explore four large themed 3D islands. Each island has its own terrain, climate, wildlife, structures, goal, and clue about the missing explorers.
 
 ## World Structure
 
-- The harbor is the shared starting world.
-- Windcurve, Cloudhook, and Emberpeak each belong to one child designer.
-- The island tabs are the archipelago navigation map.
+- Emma, Charlie, Finn, and Neo each own one island.
+- The player chooses a starting island once after creating a hero.
+- Later travel only becomes available by finding and entering a boat.
 - WASD or arrow keys move the hero.
 - E or Space explores a nearby landmark.
 - Water marks the playable boundary of each world.
+- Each island must always have one reachable boat.
 
 ## Story Thread
 

@@ -7,7 +7,7 @@ You can create a complete 3D world by editing one JavaScript object. The engine 
 1. Open a terminal in the repository.
 2. Create your assigned branch from current `main`.
 3. Open only your assigned island file.
-4. Run `start-game.cmd` and visit your island tab after each few changes.
+4. Run `start-game.cmd`, choose your island at the start, and test it after each few changes.
 
 ## The Controls You Can Change
 
@@ -24,7 +24,7 @@ Every palette value is a six-digit hex color such as `"#49b8c8"`. The palette co
 | Setting | Allowed value | Effect |
 | --- | --- | --- |
 | `seed` | Any whole number | Makes a different land shape |
-| `size` | 34 to 76 | Width of the island |
+| `size` | 70 to 140 | Width of the island |
 | `height` | 3 to 14 | Mountain height |
 | `roughness` | 0 to 1 | Smooth hills to sharp terrain |
 | `coastWobble` | 0 to 1 | Round coast to twisty coast |
@@ -34,11 +34,11 @@ Every palette value is a six-digit hex color such as `"#49b8c8"`. The palette co
 
 ### Nature
 
-Set `trees`, `rocks`, `flowers`, and `crystals` from 0 to 180. High numbers create a dense world but can make landmarks harder to see.
+Set `trees`, `rocks`, `flowers`, and `crystals` from 0 to 400. High numbers create a dense world but can make landmarks harder to see.
 
 ### Landmarks and creatures
 
-Allowed landmark kinds are `camp`, `crystal`, `gate`, `ruins`, `shipwreck`, `tower`, and `village`.
+Allowed landmark kinds are `boat`, `camp`, `crystal`, `gate`, `ruins`, `shipwreck`, `tower`, and `village`. Every island must keep one `boat`, because that is the only way players can travel after the game starts.
 
 Allowed creature kinds are `bird`, `crawler`, `fox`, and `spirit`.
 
@@ -52,4 +52,4 @@ Run:
 node scripts/validate-islands.mjs
 ```
 
-Then play your island. Walk to each landmark and press E. When it looks right, commit only your assigned island file and push your branch.
+Then play your island. Walk to each landmark and press E, and make sure the boat opens the destination chooser. When it looks right, commit only your assigned island file and push your branch.

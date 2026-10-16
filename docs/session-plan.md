@@ -3,7 +3,7 @@
 ## 1. Start Together
 
 - Pull the latest `main` branch.
-- Run the validator and play all island tabs.
+- Run the validator and choose each starting island in turn.
 - Each child creates or switches to their own island branch.
 
 ## 2. Design Separately

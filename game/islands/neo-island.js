@@ -1,9 +1,9 @@
-// KID THREE OWNS THIS FILE. Other teammates should not edit it at the same time.
+// NEO OWNS THIS FILE. Other teammates should not edit it at the same time.
 // Change the numbers, colors, names, story, landmarks, and creatures below.
 export default {
-  id: "emberpeak-island",
-  name: "Emberpeak Island",
-  designer: "Kid Three",
+  id: "neo-island",
+  name: "Neo Island",
+  designer: "Neo",
   tagline: "Warm black mountains surround a forest of glowing stone.",
   biome: "volcanic highlands",
 
@@ -20,7 +20,7 @@ export default {
 
   terrain: {
     seed: 303,
-    size: 62,
+    size: 134,
     height: 12,
     roughness: 0.86,
     coastWobble: 0.48
@@ -32,47 +32,54 @@ export default {
     windSpeed: 0.75
   },
 
-  playerStart: [0, 19],
+  playerStart: [0, 33],
 
   nature: {
-    trees: 42,
-    rocks: 125,
-    flowers: 8,
-    crystals: 55
+    trees: 150,
+    rocks: 360,
+    flowers: 55,
+    crystals: 220
   },
 
   landmarks: [
     {
       kind: "village",
       name: "Ashlight Village",
-      position: [-9, 7],
+      position: [-24, 15],
       color: "#cb6d45",
       message: "The empty homes are warm, and a meal is still cooking."
     },
     {
       kind: "gate",
       name: "Mountain Door",
-      position: [2, -14],
+      position: [3, -31],
       color: "#de7a4c",
       message: "Three compass symbols are carved into the door. One is still dark."
     },
     {
       kind: "crystal",
       name: "Ember Heart",
-      position: [12, -2],
+      position: [28, -5],
       color: "#ff714c",
       message: "The Ember Heart pulses whenever another island's mystery is solved."
+    },
+    {
+      kind: "boat",
+      name: "Neo's Ember Ferry",
+      position: [-32, 20],
+      color: "#df7650",
+      message: "Its black hull is cool even beside the glowing shore."
     }
   ],
 
   creatures: [
-    { kind: "crawler", name: "Coalback", position: [8, 9], color: "#4a4542" },
-    { kind: "fox", name: "Ember Fox", position: [-12, -4], color: "#df6544" },
-    { kind: "spirit", name: "Cinder Wisp", position: [6, -10], color: "#ff9a55" }
+    { kind: "crawler", name: "Coalback", position: [20, 20], color: "#4a4542" },
+    { kind: "fox", name: "Ember Fox", position: [-27, -8], color: "#df6544" },
+    { kind: "spirit", name: "Cinder Wisp", position: [13, -24], color: "#ff9a55" }
   ],
 
   story: {
-    arrival: "The rocks glow gently beneath your boots, but no smoke rises from the peak.",
+    arrival: "The rocks of Neo Island glow beneath your boots, but no smoke rises from the peak.",
     goal: "Light the final symbol on the Mountain Door.",
     secret: "The explorers are alive behind the door, trapped between all three islands."
   }

@@ -1,10 +1,10 @@
-import harborIsland from "./harbor-island.js";
-import kidOneIsland from "./kid-one-island.js";
-import kidTwoIsland from "./kid-two-island.js";
-import kidThreeIsland from "./kid-three-island.js";
+import emmaIsland from "./emma-island.js";
+import charlieIsland from "./charlie-island.js";
+import finnIsland from "./finn-island.js";
+import neoIsland from "./neo-island.js";
 import { validateIsland } from "./island-schema.js";
 
-export const islands = [harborIsland, kidOneIsland, kidTwoIsland, kidThreeIsland];
+export const islands = [emmaIsland, charlieIsland, finnIsland, neoIsland];
 
 export function getIsland(id) {
   return islands.find((island) => island.id === id) || islands[0];

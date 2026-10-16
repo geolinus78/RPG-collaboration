@@ -1,12 +1,13 @@
 export const ISLAND_LIMITS = {
-  maxLandmarks: 12,
-  maxCreatures: 10,
-  maxScatterPerType: 180,
-  maxTerrainSize: 76,
-  minTerrainSize: 34
+  maxLandmarks: 16,
+  maxCreatures: 14,
+  maxScatterPerType: 400,
+  maxTerrainSize: 140,
+  minTerrainSize: 70
 };
 
 export const ALLOWED_LANDMARKS = [
+  "boat",
   "camp",
   "crystal",
   "gate",
@@ -81,6 +82,9 @@ export function validateIsland(island) {
       requireText(landmark.message, `landmarks[${index}].message`, errors);
       validatePosition(landmark.position, `landmarks[${index}].position`, errors);
     });
+    if (!island.landmarks.some((landmark) => landmark.kind === "boat")) {
+      errors.push("landmarks must include one boat so the player can travel.");
+    }
   }
 
   if (!Array.isArray(island.creatures)) {

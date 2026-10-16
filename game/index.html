@@ -84,6 +84,18 @@
         </form>
       </section>
 
+      <section class="island-select-screen screen" id="islandSelectScreen" aria-label="Choose a starting island" hidden>
+        <header class="screen-header">
+          <div>
+            <p class="eyebrow">Adventure start</p>
+            <h1>Choose Your Island</h1>
+          </div>
+          <button class="secondary-button" type="button" id="islandSelectBackButton">Back</button>
+        </header>
+        <p class="selection-intro">Choose where your hero begins. After landing, you must find that island's boat before you can travel anywhere else.</p>
+        <div class="island-choice-grid" id="startIslandOptions"></div>
+      </section>
+
       <section class="game-view screen" id="gameScreen" aria-label="Game screen" hidden>
         <header class="topbar">
           <div>
@@ -97,11 +109,9 @@
           </div>
         </header>
 
-        <nav class="island-tabs" id="islandTabs" aria-label="Choose an island"></nav>
-
         <section class="play-area">
           <div class="world-stage" id="worldStage">
-            <canvas id="worldCanvas" aria-label="Playable 3D island world"></canvas>
+            <canvas id="worldCanvas" tabindex="0" aria-label="Playable 3D island world"></canvas>
             <div class="world-loading" id="worldLoading">Building island...</div>
 
             <aside class="hud-panel" aria-label="Game status">
@@ -122,7 +132,15 @@
             <div class="control-hint" aria-hidden="true">
               <span>WASD move</span>
               <span>E explore</span>
+              <span>Find the boat to travel</span>
             </div>
+
+            <section class="travel-panel" id="travelPanel" aria-label="Boat destinations" hidden>
+              <p class="eyebrow">Aboard the island boat</p>
+              <h2>Where should we sail?</h2>
+              <div class="island-choice-grid travel-choice-grid" id="travelIslandOptions"></div>
+              <button class="secondary-button compact-button" type="button" id="closeTravelButton">Stay here</button>
+            </section>
           </div>
         </section>
       </section>

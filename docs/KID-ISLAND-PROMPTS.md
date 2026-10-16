@@ -1,33 +1,43 @@
 # Copy-And-Paste Island Prompts
 
-Each child can paste their matching prompt into Codex while working in their own clone. Replace the words in square brackets with their ideas.
+Each child pastes their matching prompt into Codex while working in their own clone. The files already contain starter worlds, so the child can either keep parts they like or redesign everything except the permanent `id` and required boat.
 
-## Prompt For Kid One
+## Emma's Prompt
 
 ```text
-Help me design Windcurve Island in our Shared Quest game. Work only in game/islands/kid-one-island.js. Do not edit the island registry, schema, 3D engine, main.js, HTML, CSS, or either other kid's island file. Keep the id "windcurve-island" unchanged.
+Help me design Emma Island in our Shared Quest game. Work only in game/islands/emma-island.js. Do not edit the registry, schema, 3D engine, main.js, HTML, CSS, or another child's island file. Keep the id "emma-island" unchanged and keep exactly one reachable landmark with kind "boat" so players can travel.
 
-My designer name is [NAME]. I want the island theme to be [THEME]. I want players to discover [STORY IDEA], and my favorite colors or atmosphere are [COLORS AND MOOD]. Make a rich but playable 3D world by changing the terrain, palette, atmosphere, nature, landmarks, creatures, and story in my assigned file. Keep playerStart on safe land and keep important landmarks within about 20 units of the center.
+My island theme is [THEME]. I want players to discover [STORY IDEA], and I want the colors and mood to feel [COLORS AND MOOD]. Make the large 3D world rich but playable by changing terrain, palette, atmosphere, nature, landmarks, creatures, and story. Spread interesting places across the island, keep playerStart safely on land, and put the boat somewhere the player can discover by exploring.
 
-Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js for the allowed values. Run node scripts/validate-islands.mjs, start the game, visually check my island tab, fix any errors, then commit only game/islands/kid-one-island.js and push my current branch. Tell me the branch name and summarize my island when finished.
+Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js. Run node scripts/validate-islands.mjs, start the game, choose Emma Island, test movement and every landmark, verify that the boat opens the sailing chooser, then commit only game/islands/emma-island.js and push branch island-emma. Summarize the island when finished.
 ```
 
-## Prompt For Kid Two
+## Charlie's Prompt
 
 ```text
-Help me design Cloudhook Island in our Shared Quest game. Work only in game/islands/kid-two-island.js. Do not edit the island registry, schema, 3D engine, main.js, HTML, CSS, or either other kid's island file. Keep the id "cloudhook-island" unchanged.
+Help me design Charlie Island in our Shared Quest game. Work only in game/islands/charlie-island.js. Do not edit the registry, schema, 3D engine, main.js, HTML, CSS, or another child's island file. Keep the id "charlie-island" unchanged and keep exactly one reachable landmark with kind "boat" so players can travel.
 
-My designer name is [NAME]. I want the island theme to be [THEME]. I want players to discover [STORY IDEA], and my favorite colors or atmosphere are [COLORS AND MOOD]. Make a rich but playable 3D world by changing the terrain, palette, atmosphere, nature, landmarks, creatures, and story in my assigned file. Keep playerStart on safe land and keep important landmarks within about 20 units of the center.
+My island theme is [THEME]. I want players to discover [STORY IDEA], and I want the colors and mood to feel [COLORS AND MOOD]. Make the large 3D world rich but playable by changing terrain, palette, atmosphere, nature, landmarks, creatures, and story. Spread interesting places across the island, keep playerStart safely on land, and put the boat somewhere the player can discover by exploring.
 
-Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js for the allowed values. Run node scripts/validate-islands.mjs, start the game, visually check my island tab, fix any errors, then commit only game/islands/kid-two-island.js and push my current branch. Tell me the branch name and summarize my island when finished.
+Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js. Run node scripts/validate-islands.mjs, start the game, choose Charlie Island, test movement and every landmark, verify that the boat opens the sailing chooser, then commit only game/islands/charlie-island.js and push branch island-charlie. Summarize the island when finished.
 ```
 
-## Prompt For Kid Three
+## Finn's Prompt
 
 ```text
-Help me design Emberpeak Island in our Shared Quest game. Work only in game/islands/kid-three-island.js. Do not edit the island registry, schema, 3D engine, main.js, HTML, CSS, or either other kid's island file. Keep the id "emberpeak-island" unchanged.
+Help me design Finn Island in our Shared Quest game. Work only in game/islands/finn-island.js. Do not edit the registry, schema, 3D engine, main.js, HTML, CSS, or another child's island file. Keep the id "finn-island" unchanged and keep exactly one reachable landmark with kind "boat" so players can travel.
 
-My designer name is [NAME]. I want the island theme to be [THEME]. I want players to discover [STORY IDEA], and my favorite colors or atmosphere are [COLORS AND MOOD]. Make a rich but playable 3D world by changing the terrain, palette, atmosphere, nature, landmarks, creatures, and story in my assigned file. Keep playerStart on safe land and keep important landmarks within about 20 units of the center.
+My island theme is [THEME]. I want players to discover [STORY IDEA], and I want the colors and mood to feel [COLORS AND MOOD]. Make the large 3D world rich but playable by changing terrain, palette, atmosphere, nature, landmarks, creatures, and story. Spread interesting places across the island, keep playerStart safely on land, and put the boat somewhere the player can discover by exploring.
 
-Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js for the allowed values. Run node scripts/validate-islands.mjs, start the game, visually check my island tab, fix any errors, then commit only game/islands/kid-three-island.js and push my current branch. Tell me the branch name and summarize my island when finished.
+Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js. Run node scripts/validate-islands.mjs, start the game, choose Finn Island, test movement and every landmark, verify that the boat opens the sailing chooser, then commit only game/islands/finn-island.js and push branch island-finn. Summarize the island when finished.
+```
+
+## Neo's Prompt
+
+```text
+Help me design Neo Island in our Shared Quest game. Work only in game/islands/neo-island.js. Do not edit the registry, schema, 3D engine, main.js, HTML, CSS, or another child's island file. Keep the id "neo-island" unchanged and keep exactly one reachable landmark with kind "boat" so players can travel.
+
+My island theme is [THEME]. I want players to discover [STORY IDEA], and I want the colors and mood to feel [COLORS AND MOOD]. Make the large 3D world rich but playable by changing terrain, palette, atmosphere, nature, landmarks, creatures, and story. Spread interesting places across the island, keep playerStart safely on land, and put the boat somewhere the player can discover by exploring.
+
+Read docs/KID-ISLAND-GUIDE.md and game/islands/island-schema.js. Run node scripts/validate-islands.mjs, start the game, choose Neo Island, test movement and every landmark, verify that the boat opens the sailing chooser, then commit only game/islands/neo-island.js and push branch island-neo. Summarize the island when finished.
 ```

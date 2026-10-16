@@ -1,7 +1,8 @@
+// EMMA OWNS THIS FILE. Other teammates should not edit it at the same time.
 export default {
-  id: "harbor-of-legends",
-  name: "Harbor of Legends",
-  designer: "Shared team",
+  id: "emma-island",
+  name: "Emma Island",
+  designer: "Emma",
   tagline: "The safe harbor where every expedition begins.",
   biome: "sunlit harbor",
 
@@ -18,8 +19,8 @@ export default {
 
   terrain: {
     seed: 11,
-    size: 48,
-    height: 7,
+    size: 112,
+    height: 10,
     roughness: 0.34,
     coastWobble: 0.42
   },
@@ -30,47 +31,54 @@ export default {
     windSpeed: 0.55
   },
 
-  playerStart: [0, 9],
+  playerStart: [0, 26],
 
   nature: {
-    trees: 55,
-    rocks: 24,
-    flowers: 80,
-    crystals: 4
+    trees: 240,
+    rocks: 90,
+    flowers: 260,
+    crystals: 18
   },
 
   landmarks: [
     {
       kind: "village",
       name: "Expedition Harbor",
-      position: [0, 1],
+      position: [0, 4],
       color: "#b75b45",
       message: "Maps, supplies, and three empty docks wait for the young island designers."
     },
     {
       kind: "tower",
       name: "Beacon Tower",
-      position: [-9, -5],
+      position: [-22, -10],
       color: "#f4d66d",
       message: "The beacon points toward three islands that do not appear on any old chart."
     },
     {
       kind: "shipwreck",
       name: "The Returned Bow",
-      position: [11, 5],
+      position: [25, 10],
       color: "#6e4835",
       message: "Only the front of the previous explorers' ship returned with the tide."
+    },
+    {
+      kind: "boat",
+      name: "Emma's Explorer Boat",
+      position: [-28, 18],
+      color: "#f0c85a",
+      message: "Climb aboard to sail to another island."
     }
   ],
 
   creatures: [
-    { kind: "bird", name: "Harbor Gull", position: [-6, 7], color: "#f8f3df" },
-    { kind: "fox", name: "Dock Fox", position: [7, 3], color: "#cf7044" }
+    { kind: "bird", name: "Harbor Gull", position: [-16, 20], color: "#f8f3df" },
+    { kind: "fox", name: "Dock Fox", position: [18, 8], color: "#cf7044" }
   ],
 
   story: {
-    arrival: "The Harbor of Legends is busy with one final expedition preparation.",
-    goal: "Visit each child's island and discover what happened to the previous explorers.",
+    arrival: "You arrive on Emma Island, where the Harbor of Legends is preparing an expedition.",
+    goal: "Explore Emma Island and find the explorer boat when you are ready to travel.",
     secret: "The broken ship carries a compass mark that matches all three islands."
   }
 };

@@ -17,8 +17,6 @@
 }
 
 body {
-  display: flex;
-  justify-content: flex-end;
   min-height: 100vh;
   margin: 0;
   color: var(--ink);
@@ -38,13 +36,10 @@ input {
 }
 
 .shell {
-  width: min(500px, 100%);
+  width: 100%;
   min-height: 100vh;
-  margin-left: auto;
   padding: 14px;
-  border-left: 2px solid rgba(92, 65, 45, 0.22);
   background: rgba(247, 243, 232, 0.96);
-  box-shadow: -16px 0 32px rgba(23, 32, 38, 0.14);
 }
 
 .screen {
@@ -53,6 +48,7 @@ input {
 
 .menu-screen,
 .creator-screen,
+.island-select-screen,
 .creator-panel,
 .creator-preview,
 .game-view {
@@ -60,6 +56,8 @@ input {
 }
 
 .menu-screen {
+  max-width: 900px;
+  margin: 0 auto;
   align-content: center;
   gap: 18px;
 }
@@ -101,8 +99,22 @@ input {
 }
 
 .creator-screen {
+  max-width: 1000px;
+  margin: 0 auto;
   align-content: start;
   gap: 18px;
+}
+
+.island-select-screen {
+  align-content: start;
+  gap: 18px;
+}
+
+.selection-intro {
+  max-width: 760px;
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.5;
 }
 
 .screen-header,
@@ -368,38 +380,49 @@ h2 {
   white-space: nowrap;
 }
 
-.island-tabs {
+.island-choice-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 5px;
+  gap: 12px;
 }
 
-.island-tab {
+.island-choice {
+  display: grid;
+  align-content: start;
+  gap: 8px;
   min-width: 0;
-  min-height: 38px;
-  padding: 4px;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  min-height: 170px;
+  padding: 16px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
   color: var(--ink);
   background: #fffdf7;
   cursor: pointer;
+  text-align: left;
+}
+
+.island-choice:hover,
+.island-choice:focus-visible {
+  border-color: var(--focus);
+  outline: 3px solid rgba(22, 92, 171, 0.2);
+}
+
+.island-choice-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.island-choice-biome {
+  color: #216786;
   font-size: 0.78rem;
   font-weight: 700;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  text-transform: uppercase;
 }
 
-.island-tab:hover,
-.island-tab:focus-visible,
-.island-tab.selected {
-  border-color: var(--focus);
-  outline: 2px solid rgba(22, 92, 171, 0.2);
-}
-
-.island-tab.selected {
-  color: #fff;
-  background: #216786;
+.island-choice-tagline {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .play-area,
@@ -409,7 +432,7 @@ h2 {
 
 .world-stage {
   position: relative;
-  height: clamp(480px, 70vh, 680px);
+  height: max(560px, calc(100vh - 190px));
   overflow: hidden;
   border: 3px solid var(--wood);
   border-radius: 8px;
@@ -453,6 +476,37 @@ h2 {
   background: rgba(18, 35, 43, 0.72);
   font-size: 0.7rem;
   font-weight: 700;
+}
+
+.travel-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 8;
+  display: grid;
+  gap: 14px;
+  width: min(920px, calc(100% - 32px));
+  max-height: calc(100% - 32px);
+  padding: 20px;
+  overflow: auto;
+  border: 2px solid var(--wood);
+  border-radius: 8px;
+  background: rgba(255, 250, 240, 0.98);
+  box-shadow: 0 20px 60px rgba(23, 32, 38, 0.42);
+  transform: translate(-50%, -50%);
+}
+
+.travel-panel h2 {
+  margin-bottom: 0;
+  font-size: 1.35rem;
+}
+
+.travel-choice-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.travel-choice-grid .island-choice {
+  min-height: 130px;
 }
 
 .hud-panel {
@@ -511,7 +565,15 @@ h2 {
     height: 500px;
   }
 
-  .island-tab {
-    font-size: 0.68rem;
+  .island-choice-grid,
+  .travel-choice-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 381px) and (max-width: 800px) {
+  .island-choice-grid,
+  .travel-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

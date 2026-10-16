@@ -2,7 +2,7 @@
 
 ## One Island, One Owner
 
-Each child edits only their assigned `game/islands/kid-*-island.js` file. The shared engine, registry, HTML, and CSS belong to the adult integration branch unless the group agrees otherwise.
+Each child edits only their assigned named island file. The shared engine, registry, HTML, and CSS belong to the adult integration branch unless the group agrees otherwise.
 
 ## Before Sharing
 
@@ -16,9 +16,9 @@ Each child edits only their assigned `game/islands/kid-*-island.js` file. The sh
 Good commit messages describe the visible result:
 
 ```text
-Turn Windcurve into a giant flower forest
-Add the Cloud Bell mystery
-Build Emberpeak crystal village
+Turn Emma Island into a giant flower forest
+Add Charlie's hidden wind temple
+Build Neo's crystal village
 ```
 
 ## Conflict Rule

@@ -7,9 +7,10 @@ const HERO_COLORS = {
 };
 
 export class IslandWorld {
-  constructor({ canvas, onMessage }) {
+  constructor({ canvas, onMessage, onTravel }) {
     this.canvas = canvas;
     this.onMessage = onMessage;
+    this.onTravel = onTravel;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(52, 1, 0.1, 320);
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
@@ -61,7 +62,8 @@ export class IslandWorld {
 
   bindControls() {
     window.addEventListener("keydown", (event) => {
-      if (!this.active || event.target.matches("input, button")) {
+      const isTyping = event.target instanceof HTMLElement && event.target.matches("input, textarea, select, [contenteditable='true']");
+      if (!this.active || isTyping) {
         return;
       }
 
@@ -143,7 +145,8 @@ export class IslandWorld {
   }
 
   buildWater(island) {
-    const geometry = new THREE.PlaneGeometry(180, 180, 60, 60);
+    const oceanSize = Math.max(260, island.terrain.size * 2.6);
+    const geometry = new THREE.PlaneGeometry(oceanSize, oceanSize, 72, 72);
     geometry.rotateX(-Math.PI / 2);
     const material = new THREE.MeshPhysicalMaterial({
       color: island.palette.deepWater,
@@ -172,7 +175,7 @@ export class IslandWorld {
   }
 
   buildTerrain(island) {
-    const segments = 88;
+    const segments = Math.round(THREE.MathUtils.clamp(island.terrain.size * 1.1, 112, 156));
     const geometry = new THREE.PlaneGeometry(island.terrain.size, island.terrain.size, segments, segments);
     const positions = geometry.attributes.position;
     const colors = [];
@@ -344,6 +347,7 @@ export class IslandWorld {
       });
       group.userData.message = `${landmark.name}: ${landmark.message}`;
       group.userData.name = landmark.name;
+      group.userData.kind = landmark.kind;
       this.interactables.push(group);
       this.worldGroup.add(group);
     });
@@ -404,7 +408,7 @@ export class IslandWorld {
     if (!move.lengthSq()) return;
 
     move.normalize();
-    const speed = 7.2;
+    const speed = 11;
     const nextX = this.player.position.x + move.x * speed * delta;
     const nextZ = this.player.position.z + move.z * speed * delta;
     const nextHeight = this.terrainHeight(nextX, nextZ);
@@ -474,7 +478,12 @@ export class IslandWorld {
     });
 
     if (nearest && nearestDistance < 6) {
-      this.onMessage(nearest.userData.message);
+      if (nearest.userData.kind === "boat") {
+        this.keys.clear();
+        this.onTravel();
+      } else {
+        this.onMessage(nearest.userData.message);
+      }
     } else {
       this.onMessage(this.currentIsland.story.goal);
     }
@@ -586,6 +595,22 @@ function createLandmark(landmark) {
     const top = new THREE.Mesh(new THREE.BoxGeometry(6, 1.2, 1.8), stone);
     top.position.y = 6.2;
     group.add(left, right, top);
+  } else if (landmark.kind === "boat") {
+    const hull = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 2.4, 8, 10, 1, false, 0, Math.PI), dark);
+    hull.rotation.z = Math.PI / 2;
+    hull.rotation.x = Math.PI / 2;
+    hull.position.y = 1.15;
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(2.05, 0.18, 6, 24, Math.PI), stone);
+    rim.rotation.set(Math.PI / 2, 0, Math.PI / 2);
+    rim.scale.x = 1.8;
+    rim.position.y = 1.55;
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.24, 6.5, 8), dark);
+    mast.position.y = 4.1;
+    const sail = new THREE.Mesh(new THREE.ConeGeometry(2.3, 4.4, 3), stone);
+    sail.position.set(1.35, 4.3, 0);
+    sail.rotation.z = -Math.PI / 2;
+    sail.scale.z = 0.08;
+    group.add(hull, rim, mast, sail);
   } else if (landmark.kind === "shipwreck") {
     const hull = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 2.2, 7, 7, 1, false, 0, Math.PI), dark);
     hull.rotation.z = Math.PI / 2;

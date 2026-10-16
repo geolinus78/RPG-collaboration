@@ -2,15 +2,17 @@
 
 | Island | Owner | Branch | Status | Adult check |
 | --- | --- | --- | --- | --- |
-| Windcurve Island | Kid One | `island-one-name` | Ready to design |  |
-| Cloudhook Island | Kid Two | `island-two-name` | Ready to design |  |
-| Emberpeak Island | Kid Three | `island-three-name` | Ready to design |  |
+| Emma Island | Emma | `island-emma` | Ready to design |  |
+| Charlie Island | Charlie | `island-charlie` | Ready to design |  |
+| Finn Island | Finn | `island-finn` | Ready to design |  |
+| Neo Island | Neo | `island-neo` | Ready to design |  |
 
 ## Merge Checklist
 
 - Validator passes.
-- Island loads from its tab.
+- Island can be chosen at the start.
 - Player starts on land.
 - Landmarks can be reached and explored.
+- The boat can be found and opens the sailing menu.
 - No files belonging to another child changed.
 - Branch is pushed to GitHub.

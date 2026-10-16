@@ -1,5 +1,5 @@
-// Copy this file only when the group adds a fourth island.
-// For the current project, edit your assigned kid-one, kid-two, or kid-three file instead.
+// Copy this file only when the group adds another island.
+// For the current project, edit your assigned Emma, Charlie, Finn, or Neo file instead.
 export default {
   id: "my-island",
   name: "My Island",
@@ -20,7 +20,7 @@ export default {
 
   terrain: {
     seed: 404,
-    size: 52,
+    size: 104,
     height: 8,
     roughness: 0.5,
     coastWobble: 0.5
@@ -32,7 +32,7 @@ export default {
     windSpeed: 0.6
   },
 
-  playerStart: [0, 15],
+  playerStart: [0, 26],
 
   nature: {
     trees: 70,
@@ -48,6 +48,13 @@ export default {
       position: [0, -6],
       color: "#b8b29f",
       message: "Write what the player discovers here."
+    },
+    {
+      kind: "boat",
+      name: "My Island Boat",
+      position: [25, 16],
+      color: "#e8cc7d",
+      message: "The boat is ready to sail to another island."
     }
   ],
 
