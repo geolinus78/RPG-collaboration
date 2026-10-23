@@ -1,6 +1,6 @@
 import { IslandWorld } from "./island-engine.js";
 import { getIsland, islands, validateRegistry } from "../islands/island-registry.js";
-import { MultiplayerSession } from "./multiplayer.js";
+import { MultiplayerSession } from "./multiplayer.js?v=island-quest-2";
 import { IslandEditor } from "./island-editor.js";
 
 const heroStyles = {
@@ -137,7 +137,10 @@ document.getElementById("resetGameButton").addEventListener("click", () => {
   resetDialog.showModal();
 });
 document.getElementById("cancelResetButton").addEventListener("click", () => resetDialog.close());
-document.getElementById("confirmResetButton").addEventListener("click", () => {
+document.getElementById("confirmResetButton").addEventListener("click", async event => {
+  const button = event.currentTarget, cancel = document.getElementById("cancelResetButton");
+  button.disabled = true; cancel.disabled = true;
+  resetDialog.addEventListener("cancel", preventResetCancel);
   // Cancel unsent edits before disconnecting. Full navigation recreates every
   // screen, animation, timer, and form from its original startup defaults.
   if (editor) {
@@ -145,9 +148,19 @@ document.getElementById("confirmResetButton").addEventListener("click", () => {
     editor.dirty = false; editor.setLocked(true); editor.world.setActive(false);
   }
   world?.setActive(false);
-  session.reset();
-  location.replace(location.pathname);
+  try {
+    await session.leave();
+    location.replace(location.pathname);
+  } catch (error) {
+    document.getElementById("resetGameDescription").textContent = `Your island could not be released: ${error.message} Check your connection and try Reset to start again.`;
+    editor?.setLocked(!connected || session.me?.ready || session.state?.phase !== "design" || session.remaining <= 0);
+    if (world) world.setActive(connected && !gameScreen.hidden && travelPanel.hidden);
+  } finally {
+    button.disabled = false; cancel.disabled = false;
+    resetDialog.removeEventListener("cancel", preventResetCancel);
+  }
 });
+function preventResetCancel(event) { event.preventDefault(); }
 
 async function runLobbyAction(task, button) {
   if (button) button.disabled = true;

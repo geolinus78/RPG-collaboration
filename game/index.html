@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Shared Quest</title>
+    <title>Island Quest</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -13,7 +13,7 @@
       </nav>
       <dialog id="resetGameDialog" class="reset-dialog" aria-labelledby="resetGameTitle" aria-describedby="resetGameDescription">
         <h2 id="resetGameTitle">Return to the beginning?</h2>
-        <p id="resetGameDescription">Return to the opening menu and clear this browser's current game. Other players can continue their game. A new room starts with the original islands and a five-minute design timer.</p>
+        <p id="resetGameDescription">Leave this room and return to the opening menu. Your island keeps its saved design and becomes available for a new explorer to take over. Other players can continue; if you are the host, another player becomes host.</p>
         <div class="reset-dialog-actions">
           <button class="secondary-button" id="cancelResetButton" type="button" autofocus>Keep playing</button>
           <button class="primary-button" id="confirmResetButton" type="button">Reset to start</button>
@@ -27,7 +27,7 @@
         </div>
         <div class="menu-copy">
           <p class="eyebrow">The archipelago chronicles</p>
-          <h1>Shared Quest</h1>
+          <h1>Island Quest</h1>
           <p class="menu-line">Gather your explorers. Design an island each, then sail out to discover what everyone has built.</p>
           <div class="menu-actions">
             <button class="primary-button" type="button" id="newGameButton">New Game</button>
@@ -150,7 +150,7 @@
         <header class="topbar">
           <div>
             <p class="eyebrow" id="islandDesigner">Shared team</p>
-            <h1>Shared Quest</h1>
+            <h1>Island Quest</h1>
           </div>
           <div class="top-actions">
             <div class="status-pill" id="heroLabel">Player One</div>
@@ -210,6 +210,6 @@
     </main>
 
     <script src="config.js"></script>
-    <script type="module" src="src/main.js"></script>
+    <script type="module" src="src/main.js?v=island-quest-2"></script>
   </body>
 </html>

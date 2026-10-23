@@ -32,6 +32,43 @@ function setup(t) {
   return { session, storage, notifications };
 }
 
+test("reset releases the server claim before clearing credentials and ignores departure events", async t => {
+  const { session, storage, notifications } = setup(t);
+  session.attach(credentials());
+  const stream = session.events;
+  let reply, sent;
+  globalThis.fetch = (url, options) => { sent = { url, options }; return new Promise(resolve => { reply = resolve; }); };
+  const leaving = session.leave();
+  assert.equal(sent.url, "/api/rooms/ABC123/action");
+  assert.deepEqual(JSON.parse(sent.options.body), { type: "leave" });
+  assert.equal(sent.options.headers.Authorization, "Bearer test-token");
+  assert.equal(storage.size, 1, "Keep credentials until the island is released");
+  stream.emit("state", { ...state(), players: [] });
+  assert.equal(notifications.length, 1);
+  reply(new Response(JSON.stringify({ state: { ...state(), players: [] } }), { status: 200 }));
+  await leaving;
+  assert.equal(stream.closed, true);
+  assert.equal(storage.size, 0);
+  assert.equal(session.state, null);
+});
+
+test("a failed island release can be retried; expired claims still return to the start", async t => {
+  const { session, storage } = setup(t);
+  session.attach(credentials());
+  globalThis.fetch = async () => { throw new Error("Network unavailable"); };
+  await assert.rejects(session.leave(), /Network unavailable/);
+  assert.equal(storage.size, 1);
+  assert.equal(session.token, "test-token");
+  assert.equal(session.leaving, false);
+  for (const status of [401, 404]) {
+    session.attach(credentials());
+    globalThis.fetch = async () => new Response(JSON.stringify({ error: "Claim expired" }), { status });
+    await session.leave();
+    assert.equal(storage.size, 0);
+    assert.equal(session.state, null);
+  }
+});
+
 test("reset disconnects the player and ignores buffered room events", t => {
   const { session, storage, notifications } = setup(t);
   session.attach(credentials());

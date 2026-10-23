@@ -61,6 +61,43 @@ const fixture = () => {
   return { store, host, guest, room, a, b, advance: ms => { clock += ms; store.tick(); } };
 };
 
+test("leaving frees an island in every phase, preserves its design and transfers host", () => {
+  for (const phase of ["lobby", "design", "play"]) {
+    const { store, room, a, b } = fixture();
+    store.join(room, { name: "Third" }); store.join(room, { name: "Fourth" });
+    if (phase !== "lobby") store.action(room, a, { type: "start" });
+    if (phase === "play") for (const player of [...room.players]) store.action(room, player, { type: "ready" });
+    const saved = structuredClone(room.designs[a.islandId]), deadline = room.deadline;
+    store.action(room, a, { type: "leave" });
+    assert.equal(room.players.length, 3);
+    assert.equal(room.hostId, b.id);
+    assert.equal(room.phase, phase);
+    assert.equal(room.deadline, deadline);
+    assert.throws(() => store.authenticate(room, a.token), { status: 401 });
+    assert.throws(() => store.action(room, a, { type: "presence", islandId: a.islandId, x: 0, z: 0 }), { status: 401 });
+    const replacement = store.join(room, { name: "New explorer" });
+    const newcomer = room.players.find(player => player.id === replacement.playerId);
+    assert.equal(newcomer.islandId, a.islandId);
+    assert.equal(newcomer.ready, phase === "play");
+    assert.deepEqual(room.designs[newcomer.islandId], saved);
+    assert.equal(room.deadline, deadline);
+  }
+});
+
+test("the last designer can leave without ending the design period; a replacement becomes host", () => {
+  const store = createRoomStore(), host = store.create({ name: "First" });
+  const room = store.getRoom(host.state.code), player = store.authenticate(room, host.token);
+  store.action(room, player, { type: "start" });
+  const deadline = room.deadline;
+  store.action(room, player, { type: "leave" });
+  store.tick();
+  assert.equal(room.phase, "design");
+  assert.equal(room.hostId, null);
+  const replacement = store.join(room, { name: "Second" });
+  assert.equal(room.hostId, replacement.playerId);
+  assert.equal(room.deadline, deadline);
+});
+
 test("room ownership, host settings, capacity, and non-public credentials", () => {
   const { store, room, a, b } = fixture();
   assert.equal(room.durationSeconds, 300);
@@ -202,6 +239,15 @@ test("HTTP clients receive live room changes and the server serves only game fil
     assert.equal(fourth.state.phase, "play");
     assert.equal(fourth.state.players.find(player => player.id === fourth.playerId).ready, true);
     assert.equal((await post(roomUrl + "/join", { name: "Extra" })).status, 409);
+    assert.equal((await post(roomUrl + "/action", { type: "leave" }, host.token)).status, 200);
+    let departure = "";
+    while (true) { const chunk = await reader.read(); if (chunk.done) break; departure += decoder.decode(chunk.value); }
+    assert.equal((await post(roomUrl + "/action", { type: "ready" }, host.token)).status, 401);
+    const takeoverResponse = await post(roomUrl + "/join", { name: "Takeover" });
+    assert.equal(takeoverResponse.status, 200);
+    const takeover = await takeoverResponse.json();
+    assert.equal(takeover.state.hostId, guest.playerId);
+    assert.equal(takeover.state.players.find(p => p.id === takeover.playerId).islandId, host.state.players[0].islandId);
     assert.equal((await fetch(base + "/game/")).status, 200);
     assert.equal((await fetch(base + "/.git/config")).status, 404);
     assert.equal((await fetch(base + "/scripts/room-server.mjs")).status, 404);

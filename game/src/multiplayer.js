@@ -18,6 +18,7 @@ export class MultiplayerSession {
     return result;
   }
   accept(state) {
+    if (this.leaving) return;
     if (state.phase !== "design") this.pending = null;
     this.clockOffset = state.serverTime - Date.now();
     this.state = state;
@@ -61,18 +62,30 @@ export class MultiplayerSession {
   listen() {
     const events = new EventSource(apiUrl(`/api/rooms/${this.code}/events?token=${encodeURIComponent(this.token)}`));
     this.events = events;
-    events.onopen = () => { if (this.events === events) this.onConnection(true); };
-    events.onerror = () => { if (this.events === events) this.onConnection(false, "Connection interrupted. Reconnecting; editing is paused until the room reconnects."); };
+    events.onopen = () => { if (this.events === events && !this.leaving) this.onConnection(true); };
+    events.onerror = () => { if (this.events === events && !this.leaving) this.onConnection(false, "Connection interrupted. Reconnecting; editing is paused until the room reconnects."); };
     events.addEventListener("state", event => { if (this.events === events) this.accept(JSON.parse(event.data)); });
     events.addEventListener("presence", event => {
-      if (this.events !== events) return;
+      if (this.events !== events || this.leaving) return;
       const { players } = JSON.parse(event.data);
       if (this.state) this.state.players = players;
       this.onPresence(players);
     });
   }
   get me() { return this.state?.players.find(player => player.id === this.playerId); }
+  async leave() {
+    if (this.token && this.code) {
+      this.leaving = true;
+      this.pending = null;
+      try { await this.request(`/api/rooms/${this.code}/action`, { type: "leave" }); }
+      catch (error) {
+        if (![401, 404].includes(error.status)) { this.leaving = false; throw error; }
+      }
+    }
+    this.reset();
+  }
   reset() {
+    this.leaving = false;
     this.generation++;
     const events = this.events; this.events = null; events?.close();
     sessionStorage.removeItem("shared-quest-session");
@@ -86,7 +99,7 @@ export class MultiplayerSession {
     return result;
   }
   save(design) {
-    if (this.state?.phase !== "design" || this.me?.ready) return Promise.resolve();
+    if (this.leaving || this.state?.phase !== "design" || this.me?.ready) return Promise.resolve();
     this.pending = structuredClone(design);
     if (!this.saving) {
       const saving = this.drain().finally(() => { if (this.saving === saving) this.saving = null; });
@@ -96,12 +109,12 @@ export class MultiplayerSession {
   }
   async drain() {
     const generation = this.generation;
-    while (generation === this.generation && this.pending && this.state?.phase === "design" && !this.me?.ready) {
+    while (generation === this.generation && !this.leaving && this.pending && this.state?.phase === "design" && !this.me?.ready) {
       const design = this.pending;
       this.pending = null;
       try {
         await this.action({ type: "design", islandId: this.me.islandId, revision: this.state.designs[this.me.islandId].revision, design });
-      } catch (error) { if (generation === this.generation && !this.pending) this.pending = design; throw error; }
+      } catch (error) { if (generation === this.generation && !this.leaving && !this.pending) this.pending = design; throw error; }
     }
   }
   async flush() { if (this.saving) await this.saving; if (this.pending) await this.save(this.pending); }

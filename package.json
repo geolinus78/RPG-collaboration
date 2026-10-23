@@ -1,5 +1,5 @@
 {
-  "name": "shared-quest",
+  "name": "island-quest",
   "private": true,
   "type": "module",
   "engines": { "node": ">=20" },

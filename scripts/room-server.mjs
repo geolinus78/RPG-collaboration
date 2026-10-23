@@ -29,7 +29,7 @@ export function createRoomStore({ now = Date.now, savedRooms = [], persist = () 
     for (const streams of room.streams.values()) for (const response of streams) response.write(`event: ${event}\ndata: ${data}\n\n`);
   }
   function advance(room) {
-    if (room.phase === "design" && (now() >= room.deadline || room.players.every(player => player.ready))) {
+    if (room.phase === "design" && (now() >= room.deadline || (room.players.length > 0 && room.players.every(player => player.ready)))) {
       room.phase = "play";
       for (const player of room.players) player.ready = true;
       broadcast(room);
@@ -65,9 +65,17 @@ export function createRoomStore({ now = Date.now, savedRooms = [], persist = () 
     return join(room, input);
   }
   function action(room, player, input) {
+    // A request may have been reading its body when this player left the room.
+    if (!room.players.includes(player)) fail("Please rejoin this room.", 401);
     let removedStreams = [];
     const host = () => { if (player.id !== room.hostId) fail("Only the host can change the room settings.", 403); };
-    if (input.type === "settings") {
+    if (input.type === "leave") {
+      removedStreams = [...(room.streams.get(player.id) || [])];
+      room.streams.delete(player.id);
+      room.players = room.players.filter(member => member.id !== player.id);
+      if (room.hostId === player.id) room.hostId = room.players[0]?.id || null;
+      advance(room);
+    } else if (input.type === "settings") {
       host();
       if (room.phase !== "lobby") fail("Set the time before starting the design round.", 409);
       room.durationSeconds = duration(input.durationSeconds);

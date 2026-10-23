@@ -1,6 +1,6 @@
-# Shared Quest: Island Atlas
+# Island Quest: Island Atlas
 
-Shared Quest is a local-network multiplayer island-building and exploration game for one to four players. A timed design round comes first: paint an isometric map, drag miniature objects into place, and then sail around the archipelago together. The map uses Canvas 2D and does not require WebGL, an npm install, or an internet connection.
+Island Quest is a local-network multiplayer island-building and exploration game for one to four players. A timed design round comes first: paint an isometric map, drag miniature objects into place, and then sail around the archipelago together. The map uses Canvas 2D and does not require WebGL, an npm install, or an internet connection.
 
 ## Play The Game
 
@@ -21,13 +21,13 @@ The host can use Menu → Plan another design round to return everyone to the lo
 
 Players can join a room after the round starts if one of its four islands is unclaimed. Joining during design gives the new player the remaining shared design time without resetting anyone else's timer. Joining during exploration claims an available island with its existing design and starts the boat's arrival sequence there. Existing players keep exploring without being moved or reset. A disconnected player's claimed island remains reserved for their reconnect; it is not an unclaimed slot.
 
-**Reset to start** is available at the top of every screen, including the editor and boat destination menu. Confirm to disconnect this browser, clear its saved room login, and return to the original opening menu. Other players stay in their room. Create a new room to get the original island templates and the default five-minute timer again.
+**Reset to start** is available at the top of every screen, including the editor and boat destination menu. Confirm to leave the room, release your island for a new player, clear this browser's saved room login, and return to the opening menu. The island keeps its saved design. Other players stay in their room; if the host leaves, the next player becomes host. A failed connection keeps your login so you can retry releasing the island. Create a new room to get the original island templates and the default five-minute timer again.
 
 ## Local Network And Reconnection
 
 The server listens on `0.0.0.0:8000` and prints available IPv4 join addresses, such as `http://192.168.1.20:8000/game/`. All devices must be on the same network; guest Wi-Fi or client isolation can prevent connections. If Windows Firewall prompts for Node.js access, allow it on your private network. No router port forwarding is needed.
 
-Room state and accepted designs live in **server memory** for this initial local version. Reloading the same browser tab reconnects to your player, restores your saved design, and keeps the original deadline. Restarting the server loses rooms and designs. This version does not provide accounts, disk saves, or internet matchmaking. A dropped connection pauses editing while the browser reconnects; the design clock continues on the server.
+Reloading the same browser tab reconnects to your player, restores your saved design, and keeps the original deadline. Locally, rooms live in server memory unless `DATA_DIR` is configured. The public Railway service uses a dedicated volume so rooms and designs survive service restarts. This version does not provide accounts or public matchmaking. A dropped connection pauses editing while the browser reconnects; the design clock continues on the server.
 
 Optional environment variables: `PORT` changes the port; `HOST=127.0.0.1` restricts the server to this computer. In that mode the printed LAN links cannot accept other devices.
 

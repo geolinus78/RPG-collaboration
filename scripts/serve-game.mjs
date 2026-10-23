@@ -109,7 +109,7 @@ export function createGameServer({ store = createRoomStore(roomPersistence(proce
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
  const server = createGameServer();
  server.listen(port, process.env.HOST || "0.0.0.0", () => {
-  console.log(`Shared Quest is running at http://127.0.0.1:${port}/game/`);
+  console.log(`Island Quest is running at http://127.0.0.1:${port}/game/`);
   for (const url of localUrls(port)) console.log(`Join from another device: ${url}`);
   console.log("Keep this window open. Press Ctrl+C to stop the server.");
  });

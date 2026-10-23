@@ -1,8 +1,12 @@
-# Shared Quest on navgame.net
+# Island Quest on navgame.net
 
 Public game: https://navgame.net/wp-content/uploads/2026/shared-quest/index.html
 
 Launcher: https://navgame.net/app-launcher/
+
+The game is named Island Quest. The existing `shared-quest` URLs, Railway
+service and browser storage key remain stable so existing links and sessions
+continue working.
 
 The frontend is static files in WordPress uploads, matching the other games. Its
 deployment-only `config.js` sets `SHARED_QUEST_API` to
@@ -41,11 +45,11 @@ when replacing existing files. WordPress itself needs no redeploy.
 ## Launcher and rollback
 
 The only WordPress option changed was `navgame_app_launcher_cards`: one
-`dir-shared-quest` entry was appended. All 29 existing entries were preserved
+`dir-shared-quest` entry was appended and later renamed Island Quest. All 29 existing entries were preserved
 exactly; no scan or regeneration was run. The original array is backed up at
 `wp-content/navgame-app-launcher-backups/before-shared-quest-20261023.json` on
 the WordPress volume. Do not restore the whole array after subsequent launcher
-edits; remove just the Shared Quest card instead.
+edits; remove just the Island Quest card instead.
 
 To withdraw the game, unpublish its card in App Launcher admin. Existing games,
 WordPress plugins, DNS, scoring services and other Railway projects do not need
@@ -56,4 +60,8 @@ shared the timed editor, saved a terrain edit and entered exploration. After a
 service replacement, both reconnected and the saved terrain edit survived.
 All 29 original launcher cards and all 13 other production service deployment
 IDs were unchanged. The Node server also passes 13 automated tests plus map
-and island validation.
+and island validation. The reset/takeover update passes 17 automated tests.
+Its public browser check filled a four-player room, reset the host, verified
+host transfer and a vacant island, then joined a newcomer into that same island
+during exploration. Reset preserves the island's accepted design. Dropping a
+connection alone continues to reserve the island for reconnection.
