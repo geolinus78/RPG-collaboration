@@ -18,6 +18,7 @@ export const ALLOWED_LANDMARKS = [
 ];
 
 export const ALLOWED_CREATURES = ["bird", "crawler", "fox", "spirit"];
+export const ALLOWED_CHALLENGES = ["combat", "runes"];
 
 export function validateIsland(island) {
   const errors = [];
@@ -110,6 +111,62 @@ export function validateIsland(island) {
     requireText(island.rescue.rescuedMessage, "rescue.rescuedMessage", errors);
     requireColor(island.rescue.color, "rescue.color", errors);
     validatePosition(island.rescue.position, "rescue.position", errors);
+  }
+
+  if (!island.challenge || typeof island.challenge !== "object") {
+    errors.push("challenge must describe how the rescue cage is unlocked.");
+  } else {
+    if (!ALLOWED_CHALLENGES.includes(island.challenge.type)) {
+      errors.push(`challenge.type must be one of: ${ALLOWED_CHALLENGES.join(", ")}.`);
+    }
+    requireText(island.challenge.name, "challenge.name", errors);
+    requireText(island.challenge.hint, "challenge.hint", errors);
+    requireText(island.challenge.completeMessage, "challenge.completeMessage", errors);
+
+    if (island.challenge.type === "combat") {
+      if (!Array.isArray(island.challenge.enemies) || island.challenge.enemies.length < 1) {
+        errors.push("challenge.enemies must contain at least one enemy.");
+      } else {
+        if (island.challenge.enemies.length > 6) {
+          errors.push("challenge.enemies can contain at most 6 enemies.");
+        }
+        island.challenge.enemies.forEach((enemy, index) => {
+          requireText(enemy.name, `challenge.enemies[${index}].name`, errors);
+          requireColor(enemy.color, `challenge.enemies[${index}].color`, errors);
+          requireColor(enemy.glowColor, `challenge.enemies[${index}].glowColor`, errors);
+          requireRange(enemy.health, 1, 6, `challenge.enemies[${index}].health`, errors);
+          validatePosition(enemy.position, `challenge.enemies[${index}].position`, errors);
+        });
+      }
+    }
+
+    if (island.challenge.type === "runes") {
+      if (!Array.isArray(island.challenge.nodes) || island.challenge.nodes.length < 2) {
+        errors.push("challenge.nodes must contain at least two rune nodes.");
+      } else {
+        if (island.challenge.nodes.length > 6) {
+          errors.push("challenge.nodes can contain at most 6 rune nodes.");
+        }
+        island.challenge.nodes.forEach((node, index) => {
+          requireText(node.symbol, `challenge.nodes[${index}].symbol`, errors);
+          requireText(node.name, `challenge.nodes[${index}].name`, errors);
+          requireColor(node.color, `challenge.nodes[${index}].color`, errors);
+          requireRange(node.height, 0, 8, `challenge.nodes[${index}].height`, errors);
+          validatePosition(node.position, `challenge.nodes[${index}].position`, errors);
+        });
+      }
+      if (!Array.isArray(island.challenge.sequence) || island.challenge.sequence.length !== island.challenge.nodes?.length) {
+        errors.push("challenge.sequence must list every rune symbol in order.");
+      } else {
+        const nodeSymbols = new Set(island.challenge.nodes.map((node) => node.symbol));
+        const sequenceSymbols = new Set(island.challenge.sequence);
+        if (nodeSymbols.size !== island.challenge.nodes.length || sequenceSymbols.size !== nodeSymbols.size) {
+          errors.push("Every rune symbol must be unique and appear once in challenge.sequence.");
+        } else if (island.challenge.sequence.some((symbol) => !nodeSymbols.has(symbol))) {
+          errors.push("challenge.sequence can only use symbols from challenge.nodes.");
+        }
+      }
+    }
   }
 
   if (!island.story || typeof island.story !== "object") {

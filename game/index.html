@@ -105,6 +105,8 @@
           <div class="top-actions">
             <div class="status-pill" id="heroLabel">Player One</div>
             <div class="status-pill" id="locationLabel">Harbor of Legends</div>
+            <div class="status-pill status-health" id="healthLabel">Health 5/5</div>
+            <div class="status-pill status-rescues" id="rescueLabel">Rescued 0/4</div>
             <button class="secondary-button compact-button" type="button" id="mainMenuButton">Menu</button>
           </div>
         </header>
@@ -131,7 +133,9 @@
 
             <div class="control-hint" aria-hidden="true">
               <span>WASD move</span>
-              <span>E explore</span>
+              <span>Space jump</span>
+              <span>F attack</span>
+              <span>E interact</span>
               <span>Find the boat to travel</span>
             </div>
 
@@ -140,6 +144,13 @@
               <h2>Where should we sail?</h2>
               <div class="island-choice-grid travel-choice-grid" id="travelIslandOptions"></div>
               <button class="secondary-button compact-button" type="button" id="closeTravelButton">Stay here</button>
+            </section>
+
+            <section class="finale-panel" id="finalePanel" aria-label="Archipelago rescued" hidden>
+              <p class="eyebrow">Quest complete</p>
+              <h2>The Archipelago Is Free!</h2>
+              <p>All four explorers are safe. Their compass pieces join together, and a golden beacon now connects every island.</p>
+              <button class="primary-button" type="button" id="continueButton">Continue Exploring</button>
             </section>
           </div>
         </section>

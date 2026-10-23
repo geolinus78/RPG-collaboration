@@ -7,7 +7,7 @@ Shared Quest is a browser-based 3D exploration game. Four kid-designed islands u
 1. Double-click `start-game.cmd`, or run `node scripts/serve-game.mjs`.
 2. Open `http://127.0.0.1:8000/game/`.
 3. Choose a hero, then choose the island where the adventure starts.
-4. Move with WASD or the arrow keys. Press E or Space near landmarks.
+4. Move with WASD or the arrow keys, jump with Space, attack with F, and interact with E.
 5. Find an island's boat and explore it to choose a sailing destination.
 
 The game keeps its compact side-panel shape. It does not need npm or an internet connection after the repository has been cloned.
@@ -31,6 +31,7 @@ Open [the kid island guide](docs/KID-ISLAND-GUIDE.md), then use the matching cop
 - Numbers of trees, rocks, flowers, and crystals
 - Landmarks, creatures, names, messages, goals, and secrets
 - A named trapped person, their cage location, and their rescue message
+- A working combat or rune challenge that unlocks the rescue cage
 
 Check all islands before sharing work:
 

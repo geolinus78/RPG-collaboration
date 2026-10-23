@@ -78,6 +78,19 @@ export default {
     { kind: "spirit", name: "Wind Wisp", position: [-4, -25], color: "#9fe9df" }
   ],
 
+  challenge: {
+    type: "runes",
+    name: "Wind Rune Trail",
+    hint: "Touch the Leaf, Spiral, and Feather runes in that order with E.",
+    completeMessage: "The three wind runes sing together. Ranger Rowan's root cage unlocks!",
+    sequence: ["Leaf", "Spiral", "Feather"],
+    nodes: [
+      { symbol: "Leaf", name: "Leaf Rune", position: [13, 0], color: "#8fe06f", height: 0 },
+      { symbol: "Spiral", name: "Spiral Rune", position: [-5, -13], color: "#6fe0d5", height: 0 },
+      { symbol: "Feather", name: "Feather Rune", position: [8, -24], color: "#f5dc78", height: 0 }
+    ]
+  },
+
   rescue: {
     name: "Ranger Rowan",
     position: [27, -18],

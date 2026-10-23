@@ -62,6 +62,16 @@ export default {
     { kind: "spirit", name: "Name This Creature", position: [7, 4], color: "#9fe9df" }
   ],
 
+  challenge: {
+    type: "combat",
+    name: "Name This Challenge",
+    hint: "Defeat the cage guards with F.",
+    completeMessage: "The guards are defeated and the cage unlocks!",
+    enemies: [
+      { name: "Cage Guard", position: [-17, -10], color: "#586c73", glowColor: "#66d3df", health: 3 }
+    ]
+  },
+
   rescue: {
     name: "Name This Explorer",
     position: [-22, -12],

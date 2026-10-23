@@ -78,6 +78,19 @@ export default {
     { kind: "crawler", name: "Pebble Walker", position: [-23, 18], color: "#8995a8" }
   ],
 
+  challenge: {
+    type: "runes",
+    name: "Sky Step Trial",
+    hint: "Use Space to climb the stone steps, then touch the Moon, Bell, and Star runes with E.",
+    completeMessage: "The sky steps flare with light. Archivist Skye's crystal cage opens!",
+    sequence: ["Moon", "Bell", "Star"],
+    nodes: [
+      { symbol: "Moon", name: "Moon Step", position: [-11, 6], color: "#d9e4ff", height: 1.4 },
+      { symbol: "Bell", name: "Bell Step", position: [-17, -1], color: "#ffe783", height: 3.1 },
+      { symbol: "Star", name: "Star Step", position: [-23, -8], color: "#9eb8ff", height: 4.8 }
+    ]
+  },
+
   rescue: {
     name: "Archivist Skye",
     position: [-27, -16],

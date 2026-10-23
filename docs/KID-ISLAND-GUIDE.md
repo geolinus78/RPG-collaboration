@@ -48,6 +48,12 @@ A position is `[x, z]`. Use values roughly from -40 to 40, with zero near the ce
 
 Every island must keep its `rescue` object. The child can change the person's `name`, `position`, clothing `color`, `trappedMessage`, and `rescuedMessage`. Put the person somewhere reachable but far enough from `playerStart` that finding them feels like an adventure.
 
+### Rescue challenge
+
+Every cage is locked by the island's `challenge`. A `combat` challenge has an `enemies` list. Change each enemy's name, position, colors, and health from 1 to 6. A `runes` challenge has `nodes` and a matching `sequence`. The player must touch the rune symbols in that order with E. Give a rune a `height` above zero to put it on a jumpable stone platform; keep heights from 0 to 8 and test that every jump is reachable.
+
+Player controls are WASD or arrow keys to move, Space to jump, F to attack, and E to interact.
+
 ## Check Your Work
 
 Run:
@@ -56,4 +62,4 @@ Run:
 node scripts/validate-islands.mjs
 ```
 
-Then play your island. Walk to each landmark and press E, rescue the trapped person, and make sure the boat opens the destination chooser. When it looks right, commit only your assigned island file and push your branch.
+Then play your island. Complete its combat or rune challenge, rescue the trapped person, visit each landmark with E, and make sure the boat opens the destination chooser. When it looks right, commit only your assigned island file and push your branch.

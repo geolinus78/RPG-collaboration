@@ -380,6 +380,16 @@ h2 {
   white-space: nowrap;
 }
 
+.status-health {
+  color: #8f2f29;
+  font-weight: 700;
+}
+
+.status-rescues {
+  color: #27603c;
+  font-weight: 700;
+}
+
 .island-choice-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -465,7 +475,9 @@ h2 {
   top: 8px;
   left: 8px;
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
+  max-width: calc(100% - 16px);
 }
 
 .control-hint span {
@@ -478,7 +490,8 @@ h2 {
   font-weight: 700;
 }
 
-.travel-panel {
+.travel-panel,
+.finale-panel {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -496,9 +509,24 @@ h2 {
   transform: translate(-50%, -50%);
 }
 
-.travel-panel h2 {
+.travel-panel h2,
+.finale-panel h2 {
   margin-bottom: 0;
   font-size: 1.35rem;
+}
+
+.finale-panel {
+  z-index: 9;
+  justify-items: start;
+  width: min(560px, calc(100% - 32px));
+  color: #27241c;
+  background: rgba(255, 249, 221, 0.98);
+  border-color: #9c6d18;
+}
+
+.finale-panel p:not(.eyebrow) {
+  margin-bottom: 0;
+  line-height: 1.5;
 }
 
 .travel-choice-grid {

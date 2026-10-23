@@ -76,6 +76,17 @@ export default {
     { kind: "fox", name: "Dock Fox", position: [18, 8], color: "#cf7044" }
   ],
 
+  challenge: {
+    type: "combat",
+    name: "Shipwreck Guard",
+    hint: "Defeat both shipwreck guards with F to break the cage lock.",
+    completeMessage: "The last shipwreck guard falls. Captain Mira's cage lock turns gold!",
+    enemies: [
+      { name: "Barnacle Guard", position: [15, -14], color: "#586c73", glowColor: "#66d3df", health: 3 },
+      { name: "Rope Guard", position: [25, -13], color: "#7c5a3c", glowColor: "#f4c65d", health: 3 }
+    ]
+  },
+
   rescue: {
     name: "Captain Mira",
     position: [20, -18],

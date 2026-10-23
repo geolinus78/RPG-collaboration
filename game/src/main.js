@@ -31,6 +31,8 @@ const travelIslandOptions = document.getElementById("travelIslandOptions");
 const closeTravelButton = document.getElementById("closeTravelButton");
 const heroLabel = document.getElementById("heroLabel");
 const locationLabel = document.getElementById("locationLabel");
+const healthLabel = document.getElementById("healthLabel");
+const rescueLabel = document.getElementById("rescueLabel");
 const islandDesigner = document.getElementById("islandDesigner");
 const islandName = document.getElementById("islandName");
 const islandBiome = document.getElementById("islandBiome");
@@ -39,6 +41,8 @@ const messageEl = document.getElementById("message");
 const worldCanvas = document.getElementById("worldCanvas");
 const worldLoading = document.getElementById("worldLoading");
 const mainMenuButton = document.getElementById("mainMenuButton");
+const finalePanel = document.getElementById("finalePanel");
+const continueButton = document.getElementById("continueButton");
 
 function heroNameFromInput() {
   return heroNameInput.value.trim() || "Player One";
@@ -52,6 +56,7 @@ function showScreen(screen) {
 
   if (screen !== "game") {
     travelPanel.hidden = true;
+    finalePanel.hidden = true;
   }
 
   if (world) {
@@ -84,7 +89,16 @@ function ensureWorld() {
       onMessage: (message) => {
         messageEl.textContent = message;
       },
-      onTravel: openTravelPanel
+      onTravel: openTravelPanel,
+      onStatus: ({ health, maxHealth, rescued, total }) => {
+        healthLabel.textContent = `Health ${health}/${maxHealth}`;
+        rescueLabel.textContent = `Rescued ${rescued}/${total}`;
+      },
+      onFinale: () => {
+        finalePanel.hidden = false;
+        world.setActive(false);
+        continueButton.focus();
+      }
     });
   }
   return world;
@@ -185,6 +199,9 @@ if (registryErrors.length > 0) {
 }
 
 newGameButton.addEventListener("click", () => {
+  if (world) {
+    world.resetAdventure();
+  }
   heroNameInput.value = "Player One";
   selectAvatarOption("trail");
   updateCreatorPreview();
@@ -200,6 +217,11 @@ creatorBackButton.addEventListener("click", () => showScreen("menu"));
 islandSelectBackButton.addEventListener("click", () => showScreen("creator"));
 mainMenuButton.addEventListener("click", () => showScreen("menu"));
 closeTravelButton.addEventListener("click", closeTravelPanel);
+continueButton.addEventListener("click", () => {
+  finalePanel.hidden = true;
+  world.setActive(true);
+  worldCanvas.focus({ preventScroll: true });
+});
 
 characterForm.addEventListener("submit", (event) => {
   event.preventDefault();

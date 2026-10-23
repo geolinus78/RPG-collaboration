@@ -78,6 +78,18 @@ export default {
     { kind: "spirit", name: "Cinder Wisp", position: [13, -24], color: "#ff9a55" }
   ],
 
+  challenge: {
+    type: "combat",
+    name: "Ember Guard",
+    hint: "Defeat all three ember guards with F to cool the cage lock.",
+    completeMessage: "The Ember Guard crumbles into harmless warm stones. Engineer Ash's cage unlocks!",
+    enemies: [
+      { name: "Cinder Guard", position: [22, 13], color: "#4e4644", glowColor: "#ff784f", health: 3 },
+      { name: "Lava Guard", position: [30, 11], color: "#63504a", glowColor: "#ffb34f", health: 4 },
+      { name: "Ash Guard", position: [30, 23], color: "#393d40", glowColor: "#f06a53", health: 3 }
+    ]
+  },
+
   rescue: {
     name: "Engineer Ash",
     position: [28, 17],

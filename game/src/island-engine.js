@@ -7,10 +7,12 @@ const HERO_COLORS = {
 };
 
 export class IslandWorld {
-  constructor({ canvas, onMessage, onTravel }) {
+  constructor({ canvas, onMessage, onTravel, onStatus, onFinale }) {
     this.canvas = canvas;
     this.onMessage = onMessage;
     this.onTravel = onTravel;
+    this.onStatus = onStatus;
+    this.onFinale = onFinale;
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(52, 1, 0.1, 320);
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" });
@@ -31,6 +33,19 @@ export class IslandWorld {
     this.interactables = [];
     this.animatedObjects = [];
     this.rescuedIslands = new Set();
+    this.completedChallenges = new Set();
+    this.enemies = [];
+    this.platforms = [];
+    this.puzzleNodes = [];
+    this.puzzleStep = 0;
+    this.maxHealth = 5;
+    this.health = this.maxHealth;
+    this.attackCooldown = 0;
+    this.attackVisualTime = 0;
+    this.damageCooldown = 0;
+    this.hitFlashTime = 0;
+    this.verticalVelocity = 0;
+    this.grounded = true;
     this.water = null;
     this.waterBasePositions = null;
     this.terrainHeight = () => 0;
@@ -69,12 +84,26 @@ export class IslandWorld {
       }
 
       const key = event.key.toLowerCase();
-      if (["w", "a", "s", "d", "arrowup", "arrowleft", "arrowdown", "arrowright", " ", "e"].includes(key)) {
+      if (["w", "a", "s", "d", "arrowup", "arrowleft", "arrowdown", "arrowright", " ", "e", "f"].includes(key)) {
         event.preventDefault();
       }
 
-      if (key === " " || key === "e") {
+      if (event.repeat && [" ", "e", "f"].includes(key)) {
+        return;
+      }
+
+      if (key === " ") {
+        this.jump();
+        return;
+      }
+
+      if (key === "e") {
         this.interact();
+        return;
+      }
+
+      if (key === "f") {
+        this.attack();
         return;
       }
 
@@ -105,6 +134,22 @@ export class IslandWorld {
     }
   }
 
+  resetAdventure() {
+    this.rescuedIslands.clear();
+    this.completedChallenges.clear();
+    this.health = this.maxHealth;
+    this.emitStatus();
+  }
+
+  emitStatus() {
+    this.onStatus({
+      health: this.health,
+      maxHealth: this.maxHealth,
+      rescued: this.rescuedIslands.size,
+      total: 4
+    });
+  }
+
   loadIsland(island) {
     this.currentIsland = island;
     this.clearWorld();
@@ -122,6 +167,7 @@ export class IslandWorld {
     this.buildNature(island);
     this.buildLandmarks(island);
     this.buildCreatures(island);
+    this.buildChallenge(island);
     this.buildRescue(island);
     this.buildClouds(island);
     this.buildPlayer(island);
@@ -129,12 +175,22 @@ export class IslandWorld {
     const playerPosition = this.player.position;
     this.camera.position.set(playerPosition.x + 14, playerPosition.y + 13, playerPosition.z + 18);
     this.camera.lookAt(playerPosition.x, playerPosition.y + 2, playerPosition.z);
+    this.health = this.maxHealth;
+    this.emitStatus();
     this.onMessage(island.story.arrival);
   }
 
   clearWorld() {
     this.interactables = [];
     this.animatedObjects = [];
+    this.enemies = [];
+    this.platforms = [];
+    this.puzzleNodes = [];
+    this.puzzleStep = 0;
+    this.attackCooldown = 0;
+    this.damageCooldown = 0;
+    this.verticalVelocity = 0;
+    this.grounded = true;
     this.water = null;
     this.waterBasePositions = null;
     this.player = null;
@@ -220,7 +276,15 @@ export class IslandWorld {
 
   buildNature(island) {
     const random = seededRandom(island.terrain.seed + 700);
-    const occupied = island.landmarks.map((landmark) => landmark.position);
+    const challengePositions = island.challenge.type === "combat"
+      ? island.challenge.enemies.map((enemy) => enemy.position)
+      : island.challenge.nodes.map((node) => node.position);
+    const occupied = [
+      island.playerStart,
+      island.rescue.position,
+      ...island.landmarks.map((landmark) => landmark.position),
+      ...challengePositions
+    ];
     const treePoints = findScatterPoints(island.nature.trees, island, this.terrainHeight, random, occupied, 2.6);
     const rockPoints = findScatterPoints(island.nature.rocks, island, this.terrainHeight, random, occupied, 1.7);
     const flowerPoints = findScatterPoints(island.nature.flowers, island, this.terrainHeight, random, occupied, 1.1);
@@ -369,10 +433,56 @@ export class IslandWorld {
     });
   }
 
+  buildChallenge(island) {
+    const challenge = island.challenge;
+    const completed = this.completedChallenges.has(island.id);
+
+    if (challenge.type === "combat") {
+      challenge.enemies.forEach((enemy, index) => {
+        const group = createEnemy(enemy);
+        const [x, z] = enemy.position;
+        group.position.set(x, this.terrainHeight(x, z), z);
+        group.userData.home = group.position.clone();
+        group.userData.index = index;
+        group.visible = !completed;
+        this.enemies.push(group);
+        this.worldGroup.add(group);
+      });
+      return;
+    }
+
+    challenge.nodes.forEach((node, index) => {
+      const group = createRuneNode(node);
+      const [x, z] = node.position;
+      const baseY = this.terrainHeight(x, z);
+      const platformHeight = node.height || 0;
+      const platformTop = baseY + platformHeight;
+      group.position.set(x, baseY, z);
+      group.userData.kind = "rune";
+      group.userData.index = index;
+      group.userData.symbol = node.symbol;
+      group.userData.name = node.name;
+      group.userData.baseColor = node.color;
+      group.userData.interactionPoint = new THREE.Vector3(x, platformTop + 1, z);
+      group.userData.message = `${node.name} bears the ${node.symbol} symbol.`;
+      setRuneSolved(group, completed);
+      this.puzzleNodes.push(group);
+      this.interactables.push(group);
+      this.worldGroup.add(group);
+
+      if (platformHeight > 0) {
+        this.platforms.push({ x, z, radius: 2.7, top: platformTop });
+      }
+    });
+  }
+
   buildRescue(island) {
     const rescue = island.rescue;
     const rescued = this.rescuedIslands.has(island.id);
     const group = createRescuePerson(rescue, rescued);
+    if (!rescued && this.completedChallenges.has(island.id)) {
+      group.userData.marker.material.color.set("#ffd75e");
+    }
     const [x, z] = rescue.position;
     group.position.set(x, this.terrainHeight(x, z), z);
     group.userData.kind = "rescue";
@@ -380,6 +490,7 @@ export class IslandWorld {
     group.userData.name = rescue.name;
     group.userData.trappedMessage = rescue.trappedMessage;
     group.userData.rescuedMessage = rescue.rescuedMessage;
+    group.userData.challengeLocked = !this.completedChallenges.has(island.id);
     group.userData.message = rescued
       ? `${rescue.name} is safe and ready to help other explorers.`
       : `${rescue.name}: ${rescue.trappedMessage}`;
@@ -419,6 +530,7 @@ export class IslandWorld {
     this.player = createPlayer(this.heroStyle);
     const [x, z] = island.playerStart;
     this.player.position.set(x, this.terrainHeight(x, z) + 0.05, z);
+    this.player.userData.start = this.player.position.clone();
     this.worldGroup.add(this.player);
   }
 
@@ -431,24 +543,70 @@ export class IslandWorld {
     if (this.keys.has("a") || this.keys.has("arrowleft")) move.x -= 1;
     if (this.keys.has("d") || this.keys.has("arrowright")) move.x += 1;
 
-    if (!move.lengthSq()) return;
+    if (move.lengthSq()) {
+      move.normalize();
+      const speed = 11;
+      const nextX = this.player.position.x + move.x * speed * delta;
+      const nextZ = this.player.position.z + move.z * speed * delta;
+      const nextHeight = this.terrainHeight(nextX, nextZ);
 
-    move.normalize();
-    const speed = 11;
-    const nextX = this.player.position.x + move.x * speed * delta;
-    const nextZ = this.player.position.z + move.z * speed * delta;
-    const nextHeight = this.terrainHeight(nextX, nextZ);
-
-    if (nextHeight > 0.12) {
-      this.player.position.x = nextX;
-      this.player.position.z = nextZ;
-      this.player.position.y = THREE.MathUtils.lerp(this.player.position.y, nextHeight + 0.05, 0.28);
-      this.player.rotation.y = Math.atan2(move.x, move.z);
-      this.player.userData.walkTime += delta * 10;
-      this.player.userData.body.position.y = 1.35 + Math.abs(Math.sin(this.player.userData.walkTime)) * 0.12;
+      if (nextHeight > 0.12) {
+        this.player.position.x = nextX;
+        this.player.position.z = nextZ;
+        this.player.rotation.y = Math.atan2(move.x, move.z);
+        this.player.userData.walkTime += delta * 10;
+        this.player.userData.body.position.y = 1.35 + Math.abs(Math.sin(this.player.userData.walkTime)) * 0.12;
+      }
     } else {
-      this.onMessage("The water is too deep here. Follow the shoreline.");
+      this.player.userData.body.position.y = THREE.MathUtils.lerp(this.player.userData.body.position.y, 1.35, 0.24);
     }
+
+    const support = this.getSupportHeight(
+      this.player.position.x,
+      this.player.position.z,
+      this.player.position.y + 0.45
+    );
+
+    if (this.grounded) {
+      if (this.player.position.y > support + 0.6) {
+        this.grounded = false;
+        this.verticalVelocity = 0;
+      } else {
+        this.player.position.y = THREE.MathUtils.lerp(this.player.position.y, support + 0.05, 0.35);
+      }
+    } else {
+      const previousY = this.player.position.y;
+      this.verticalVelocity -= 26 * delta;
+      this.player.position.y += this.verticalVelocity * delta;
+      const landingHeight = this.getSupportHeight(
+        this.player.position.x,
+        this.player.position.z,
+        previousY + 0.15
+      );
+
+      if (this.verticalVelocity <= 0 && this.player.position.y <= landingHeight + 0.05) {
+        this.player.position.y = landingHeight + 0.05;
+        this.verticalVelocity = 0;
+        this.grounded = true;
+      }
+    }
+  }
+
+  getSupportHeight(x, z, maxY) {
+    let height = this.terrainHeight(x, z);
+    this.platforms.forEach((platform) => {
+      const onPlatform = Math.hypot(x - platform.x, z - platform.z) <= platform.radius;
+      if (onPlatform && platform.top <= maxY && platform.top > height) {
+        height = platform.top;
+      }
+    });
+    return height;
+  }
+
+  jump() {
+    if (!this.player || !this.grounded) return;
+    this.grounded = false;
+    this.verticalVelocity = 11.5;
   }
 
   updateCamera(delta) {
@@ -486,8 +644,105 @@ export class IslandWorld {
         entry.object.rotation.y += delta * 0.22;
       } else if (entry.kind === "pulse") {
         entry.object.material.emissiveIntensity = 0.55 + Math.sin(time * 2 + entry.offset) * 0.22;
+      } else if (entry.kind === "victory") {
+        entry.object.rotation.y += delta * 0.9;
+        entry.object.scale.setScalar(1 + Math.sin(time * 3) * 0.05);
       }
     });
+  }
+
+  updateEnemies(time, delta) {
+    if (!this.active || !this.player || this.completedChallenges.has(this.currentIsland.id)) return;
+
+    this.enemies.forEach((enemy) => {
+      if (!enemy.userData.active) return;
+      const toPlayer = new THREE.Vector3().subVectors(this.player.position, enemy.position);
+      toPlayer.y = 0;
+      const distance = toPlayer.length();
+
+      enemy.userData.body.position.y = 1.25 + Math.sin(time * 5 + enemy.userData.index) * 0.08;
+      if (distance < 18 && distance > 2.1) {
+        toPlayer.normalize();
+        const nextX = enemy.position.x + toPlayer.x * 3.4 * delta;
+        const nextZ = enemy.position.z + toPlayer.z * 3.4 * delta;
+        const nextHeight = this.terrainHeight(nextX, nextZ);
+        if (nextHeight > 0.25) {
+          enemy.position.set(nextX, nextHeight, nextZ);
+          enemy.rotation.y = Math.atan2(toPlayer.x, toPlayer.z);
+        }
+      } else if (distance <= 2.1 && this.damageCooldown <= 0) {
+        this.damagePlayer(enemy.userData.name);
+      }
+    });
+  }
+
+  updateCombatEffects(delta) {
+    this.attackCooldown = Math.max(0, this.attackCooldown - delta);
+    this.damageCooldown = Math.max(0, this.damageCooldown - delta);
+    this.attackVisualTime = Math.max(0, this.attackVisualTime - delta);
+    this.hitFlashTime = Math.max(0, this.hitFlashTime - delta);
+
+    if (this.player) {
+      this.player.userData.attackRing.visible = this.attackVisualTime > 0;
+      this.player.userData.bodyMaterial.emissive.set(this.hitFlashTime > 0 ? "#8b1717" : "#000000");
+      this.player.userData.bodyMaterial.emissiveIntensity = this.hitFlashTime > 0 ? 0.9 : 0;
+    }
+  }
+
+  attack() {
+    if (!this.player || this.attackCooldown > 0) return;
+    this.attackCooldown = 0.45;
+    this.attackVisualTime = 0.18;
+    let hitCount = 0;
+
+    this.enemies.forEach((enemy) => {
+      if (!enemy.userData.active || enemy.position.distanceTo(this.player.position) > 4.2) return;
+      hitCount += 1;
+      enemy.userData.health -= 1;
+      updateEnemyHealth(enemy);
+
+      const knockback = new THREE.Vector3().subVectors(enemy.position, this.player.position).setY(0);
+      if (knockback.lengthSq()) {
+        knockback.normalize().multiplyScalar(1.4);
+        enemy.position.add(knockback);
+      }
+
+      if (enemy.userData.health <= 0) {
+        enemy.userData.active = false;
+        enemy.visible = false;
+        this.onMessage(`${enemy.userData.name} is defeated!`);
+      }
+    });
+
+    if (hitCount && this.enemies.every((enemy) => !enemy.userData.active)) {
+      this.completeChallenge();
+    }
+  }
+
+  damagePlayer(enemyName) {
+    this.damageCooldown = 1;
+    this.hitFlashTime = 0.28;
+    this.health -= 1;
+    this.emitStatus();
+
+    if (this.health > 0) {
+      this.onMessage(`${enemyName} hits you! Press F nearby to fight back.`);
+      return;
+    }
+
+    this.health = this.maxHealth;
+    this.player.position.copy(this.player.userData.start);
+    this.verticalVelocity = 0;
+    this.grounded = true;
+    this.enemies.forEach((enemy) => {
+      enemy.userData.health = enemy.userData.maxHealth;
+      enemy.userData.active = true;
+      enemy.position.copy(enemy.userData.home);
+      enemy.visible = true;
+      updateEnemyHealth(enemy);
+    });
+    this.emitStatus();
+    this.onMessage("The guards knocked you back to shore. You recovered, but they regrouped!");
   }
 
   interact() {
@@ -496,17 +751,21 @@ export class IslandWorld {
     let nearestDistance = Infinity;
 
     this.interactables.forEach((object) => {
-      const distance = object.position.distanceTo(this.player.position);
+      const target = object.userData.interactionPoint || object.position;
+      const distance = target.distanceTo(this.player.position);
       if (distance < nearestDistance) {
         nearest = object;
         nearestDistance = distance;
       }
     });
 
-    if (nearest && nearestDistance < 6) {
+    const interactionRange = nearest?.userData.kind === "rune" ? 3.3 : 6;
+    if (nearest && nearestDistance < interactionRange) {
       if (nearest.userData.kind === "boat") {
         this.keys.clear();
         this.onTravel();
+      } else if (nearest.userData.kind === "rune") {
+        this.activateRune(nearest);
       } else if (nearest.userData.kind === "rescue") {
         this.rescuePerson(nearest);
       } else {
@@ -523,11 +782,67 @@ export class IslandWorld {
       return;
     }
 
+    if (!this.completedChallenges.has(person.userData.islandId)) {
+      this.onMessage(`The cage is still sealed. ${this.currentIsland.challenge.hint}`);
+      return;
+    }
+
     this.rescuedIslands.add(person.userData.islandId);
     person.userData.cage.visible = false;
     person.userData.marker.material.color.set("#77e08b");
     person.userData.message = `${person.userData.name} is safe and ready to help other explorers.`;
+    this.emitStatus();
     this.onMessage(person.userData.rescuedMessage);
+
+    if (this.rescuedIslands.size === 4) {
+      this.activateFinale();
+    }
+  }
+
+  activateRune(rune) {
+    if (this.completedChallenges.has(this.currentIsland.id)) {
+      this.onMessage(`${rune.userData.name} shines steadily. This puzzle is complete.`);
+      return;
+    }
+
+    const sequence = this.currentIsland.challenge.sequence;
+    const expectedSymbol = sequence[this.puzzleStep];
+    if (rune.userData.symbol !== expectedSymbol) {
+      this.puzzleStep = 0;
+      this.puzzleNodes.forEach((node) => setRuneSolved(node, false));
+      this.onMessage(`The runes go dark. Start again with the ${sequence[0]} symbol.`);
+      return;
+    }
+
+    setRuneSolved(rune, true);
+    this.puzzleStep += 1;
+    if (this.puzzleStep === sequence.length) {
+      this.completeChallenge();
+      return;
+    }
+
+    this.onMessage(`${rune.userData.name} lights up. Now find the ${sequence[this.puzzleStep]} symbol.`);
+  }
+
+  completeChallenge() {
+    if (this.completedChallenges.has(this.currentIsland.id)) return;
+    this.completedChallenges.add(this.currentIsland.id);
+    this.puzzleNodes.forEach((node) => setRuneSolved(node, true));
+    const rescue = this.interactables.find((object) => object.userData.kind === "rescue");
+    if (rescue) {
+      rescue.userData.challengeLocked = false;
+      rescue.userData.marker.material.color.set("#ffd75e");
+    }
+    this.onMessage(this.currentIsland.challenge.completeMessage);
+  }
+
+  activateFinale() {
+    const beacon = createVictoryBeacon();
+    beacon.position.copy(this.player.position);
+    beacon.position.y = this.terrainHeight(beacon.position.x, beacon.position.z) + 0.2;
+    this.worldGroup.add(beacon);
+    this.animatedObjects.push({ object: beacon, kind: "victory" });
+    this.onFinale();
   }
 
   resize() {
@@ -544,6 +859,8 @@ export class IslandWorld {
     const delta = Math.min(this.timer.getDelta(), 0.05);
     const time = this.timer.getElapsed();
     this.updatePlayer(delta);
+    this.updateEnemies(time, delta);
+    this.updateCombatEffects(delta);
     this.updateCamera(delta);
     this.updateWater(time);
     this.updateAnimatedObjects(time, delta);
@@ -734,6 +1051,132 @@ function createCreature(creature) {
   return group;
 }
 
+function createEnemy(enemy) {
+  const group = new THREE.Group();
+  const armor = new THREE.MeshStandardMaterial({ color: enemy.color, roughness: 0.6, metalness: 0.25 });
+  const dark = new THREE.MeshStandardMaterial({ color: "#272c32", roughness: 0.82 });
+  const glow = new THREE.MeshStandardMaterial({
+    color: enemy.glowColor || "#ff7a55",
+    emissive: enemy.glowColor || "#ff7a55",
+    emissiveIntensity: 1.1,
+    roughness: 0.25
+  });
+
+  const body = new THREE.Mesh(new THREE.CapsuleGeometry(0.72, 1.25, 5, 10), armor);
+  body.position.y = 1.25;
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.58, 12, 9), dark);
+  head.position.y = 2.65;
+  const eye = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.14, 0.12), glow);
+  eye.position.set(0, 2.7, -0.55);
+  const shield = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.72, 0.18, 8), armor);
+  shield.rotation.x = Math.PI / 2;
+  shield.position.set(-0.95, 1.35, -0.15);
+  group.add(body, head, eye, shield);
+
+  const healthPips = [];
+  for (let index = 0; index < enemy.health; index += 1) {
+    const pip = new THREE.Mesh(
+      new THREE.BoxGeometry(0.42, 0.18, 0.18),
+      new THREE.MeshBasicMaterial({ color: "#ff5b4d" })
+    );
+    pip.position.set((index - (enemy.health - 1) / 2) * 0.5, 3.65, 0);
+    healthPips.push(pip);
+    group.add(pip);
+  }
+
+  group.traverse((child) => {
+    if (child.isMesh) child.castShadow = true;
+  });
+  group.userData = {
+    name: enemy.name,
+    body,
+    health: enemy.health,
+    maxHealth: enemy.health,
+    healthPips,
+    active: true
+  };
+  return group;
+}
+
+function updateEnemyHealth(enemy) {
+  enemy.userData.healthPips.forEach((pip, index) => {
+    pip.visible = index < enemy.userData.health;
+  });
+}
+
+function createRuneNode(node) {
+  const group = new THREE.Group();
+  const platformHeight = node.height || 0;
+  const stone = new THREE.MeshStandardMaterial({ color: "#5d6670", roughness: 0.88 });
+  const runeMaterial = new THREE.MeshStandardMaterial({
+    color: node.color,
+    emissive: node.color,
+    emissiveIntensity: 0.7,
+    roughness: 0.25
+  });
+
+  if (platformHeight > 0) {
+    const platform = new THREE.Mesh(
+      new THREE.CylinderGeometry(2.7, 3.15, platformHeight + 0.35, 10),
+      stone
+    );
+    platform.position.y = platformHeight / 2 - 0.12;
+    platform.castShadow = true;
+    platform.receiveShadow = true;
+    group.add(platform);
+  }
+
+  const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.05, 0.75, 8), stone);
+  pedestal.position.y = platformHeight + 0.38;
+  const rune = new THREE.Mesh(new THREE.OctahedronGeometry(0.68, 0), runeMaterial);
+  rune.position.y = platformHeight + 1.35;
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(1.35, 0.08, 6, 36),
+    new THREE.MeshBasicMaterial({ color: node.color, transparent: true, opacity: 0.8 })
+  );
+  ring.rotation.x = Math.PI / 2;
+  ring.position.y = platformHeight + 0.08;
+  group.add(pedestal, rune, ring);
+  group.userData.rune = rune;
+  group.userData.ring = ring;
+  return group;
+}
+
+function setRuneSolved(group, solved) {
+  const color = solved ? "#69e68c" : group.userData.baseColor;
+  group.userData.rune.material.color.set(color);
+  group.userData.rune.material.emissive.set(color);
+  group.userData.ring.material.color.set(color);
+  group.userData.solved = solved;
+}
+
+function createVictoryBeacon() {
+  const group = new THREE.Group();
+  const gold = new THREE.MeshStandardMaterial({
+    color: "#ffd75e",
+    emissive: "#f5a623",
+    emissiveIntensity: 1.25,
+    roughness: 0.22,
+    metalness: 0.3
+  });
+  const blue = new THREE.MeshStandardMaterial({
+    color: "#74d9ff",
+    emissive: "#2f93c4",
+    emissiveIntensity: 1,
+    transparent: true,
+    opacity: 0.82
+  });
+
+  const compass = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.28, 10, 64), gold);
+  compass.position.y = 4.8;
+  const north = new THREE.Mesh(new THREE.ConeGeometry(0.65, 3.8, 4), gold);
+  north.position.y = 4.8;
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 1.8, 12, 16, 1, true), blue);
+  beam.position.y = 6;
+  group.add(compass, north, beam);
+  return group;
+}
+
 function createRescuePerson(rescue, rescued) {
   const group = new THREE.Group();
   const cage = new THREE.Group();
@@ -795,11 +1238,18 @@ function createPlayer(style) {
   hat.position.y = 3.15;
   const pack = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.95, 0.38), trimMaterial);
   pack.position.set(0, 1.55, 0.55);
-  group.add(body, head, hat, pack);
+  const attackRing = new THREE.Mesh(
+    new THREE.TorusGeometry(2.7, 0.15, 6, 36),
+    new THREE.MeshBasicMaterial({ color: "#fff2a6", transparent: true, opacity: 0.9 })
+  );
+  attackRing.rotation.x = Math.PI / 2;
+  attackRing.position.y = 1;
+  attackRing.visible = false;
+  group.add(body, head, hat, pack, attackRing);
   group.traverse((child) => {
     if (child.isMesh) child.castShadow = true;
   });
-  group.userData = { body, bodyMaterial, trimMaterial, skinMaterial, walkTime: 0 };
+  group.userData = { body, bodyMaterial, trimMaterial, skinMaterial, attackRing, walkTime: 0 };
   return group;
 }
 

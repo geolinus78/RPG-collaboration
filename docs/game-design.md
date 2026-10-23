@@ -10,7 +10,9 @@ Players choose a hero and a starting point, then explore four large themed 3D is
 - The player chooses a starting island once after creating a hero.
 - Later travel only becomes available by finding and entering a boat.
 - WASD or arrow keys move the hero.
-- E or Space explores a nearby landmark.
+- Space jumps, including onto puzzle platforms.
+- F attacks nearby enemies.
+- E interacts with landmarks, runes, boats, and rescue cages.
 - Water marks the playable boundary of each world.
 - Each island must always have one reachable boat.
 
