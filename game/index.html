@@ -8,6 +8,17 @@
   </head>
   <body>
     <main class="shell">
+      <nav class="global-controls" aria-label="Game controls">
+        <button class="secondary-button compact-button" id="resetGameButton" type="button">Reset to start</button>
+      </nav>
+      <dialog id="resetGameDialog" class="reset-dialog" aria-labelledby="resetGameTitle" aria-describedby="resetGameDescription">
+        <h2 id="resetGameTitle">Return to the beginning?</h2>
+        <p id="resetGameDescription">Return to the opening menu and clear this browser's current game. Other players can continue their game. A new room starts with the original islands and a five-minute design timer.</p>
+        <div class="reset-dialog-actions">
+          <button class="secondary-button" id="cancelResetButton" type="button" autofocus>Keep playing</button>
+          <button class="primary-button" id="confirmResetButton" type="button">Reset to start</button>
+        </div>
+      </dialog>
       <section class="menu-screen screen" id="menuScreen" aria-label="Main menu">
         <div class="menu-art" aria-hidden="true">
           <img src="assets/art/gate.svg" alt="">
@@ -15,9 +26,9 @@
           <img src="assets/art/tree.svg" alt="">
         </div>
         <div class="menu-copy">
-          <p class="eyebrow">RPG collaboration starter</p>
+          <p class="eyebrow">The archipelago chronicles</p>
           <h1>Shared Quest</h1>
-          <p class="menu-line">Build a hero, choose a route, and start mapping a newly discovered archipelago.</p>
+          <p class="menu-line">Gather your explorers. Design an island each, then sail out to discover what everyone has built.</p>
           <div class="menu-actions">
             <button class="primary-button" type="button" id="newGameButton">New Game</button>
             <button class="secondary-button" type="button" id="creatorButton">Character Creator</button>
@@ -79,9 +90,48 @@
               <h2 id="previewName">Player One</h2>
               <p id="previewStyle">Trail Scout</p>
             </div>
-            <button class="primary-button" type="submit">Start Adventure</button>
+            <button class="primary-button" type="submit">Continue to lobby</button>
           </section>
         </form>
+      </section>
+
+      <section class="lobby-screen screen" id="lobbyScreen" aria-label="Multiplayer lobby" hidden>
+        <header class="screen-header lobby-header">
+          <div><p class="eyebrow">An expedition for up to four explorers</p><h1>Make an archipelago together</h1></div>
+          <button class="secondary-button" id="lobbyBackButton" type="button">Back to menu</button>
+        </header>
+        <p id="connectionStatus" class="connection-status" role="status">Create a room or join your friends.</p>
+        <div class="lobby-entry" id="lobbyEntry">
+          <section class="lobby-card"><p class="eyebrow">Be the expedition leader</p><h2>Host a game</h2><p>Everyone designs their own island. Share the join link with your friends.</p><button class="primary-button" id="hostRoomButton" type="button">Create room</button></section>
+          <form class="lobby-card" id="joinRoomForm"><p class="eyebrow">Join your crew</p><h2>Have a room code?</h2><p>You can join an expedition already underway if an island is unclaimed. During design, you use the remaining time; during exploration, you sail straight in.</p><label for="roomCodeInput">Six-character room code</label><input id="roomCodeInput" maxlength="6" minlength="6" required autocomplete="off" placeholder="A1B2C3" pattern="[a-fA-F0-9]{6}"><button class="secondary-button" type="submit">Join room</button></form>
+        </div>
+        <div id="roomDetails" hidden>
+          <div class="room-banner"><div><p class="eyebrow">Your room code</p><strong id="roomCodeLabel"></strong></div><div class="share-address"><span>Invite your friends at:</span><div id="joinLinks"></div><button class="secondary-button compact-button" id="copyJoinButton" type="button">Copy join link</button></div></div>
+          <div class="player-slots" id="playerSlots" aria-label="Players and their islands"></div>
+          <section class="round-settings"><div><label for="designMinutes">Design time per player (minutes)</label><input id="designMinutes" type="number" value="5" min="0.25" max="60" step="0.25"><small>All players design together. Starts at 5 minutes; the host can change it before starting.</small></div><button class="primary-button" id="startDesignButton" type="button">Start island design</button><button class="primary-button" id="resumeGameButton" type="button" hidden>Return to expedition</button><button class="secondary-button" id="restartRoundButton" type="button" hidden>Plan another design round</button></section>
+          <p class="lobby-note">Each explorer owns one island. The other islands keep their starting designs if fewer than four players join. Your island is shared with everyone in this room.</p>
+        </div>
+      </section>
+
+      <section class="editor-screen screen" id="editorScreen" aria-label="Timed island editor" hidden>
+        <header class="editor-header"><div><p class="eyebrow">Design your corner of the archipelago</p><h1 id="editorIslandName">Your island</h1></div><div class="editor-round"><span id="editorSaveState">Changes save to the room</span><div class="round-clock" id="designClock" role="timer" aria-label="Design time remaining">05:00</div><button class="primary-button" id="finishDesignButton" type="button">Finish my island</button></div></header>
+        <div class="editor-crew" id="editorCrew" aria-label="Designing players"></div>
+        <div class="editor-layout">
+          <aside class="editor-library" aria-label="Island design library">
+            <h2>Terrain palette</h2><p class="library-help">Choose a surface and paint the squares. Water removes land; grow new land from the coast.</p>
+            <div id="terrainLibrary" class="terrain-library"></div>
+            <div class="brush-setting"><label for="brushSize">Brush</label><select id="brushSize"><option value="1">1 tile</option><option value="2">5 tiles</option><option value="3">13 tiles</option></select></div>
+            <h2>Object library <span>42 miniatures</span></h2><p class="library-help">Drag an object onto a free tile, or select it and click the map.</p>
+            <label class="sr-only" for="objectSearch">Search objects</label><input id="objectSearch" type="search" placeholder="Find an object…">
+            <label class="sr-only" for="objectCategory">Object category</label><select id="objectCategory"><option>All</option><option>Nature</option><option>Buildings</option><option>Details</option><option>Creatures</option></select>
+            <div id="objectLibrary" class="object-library"></div>
+          </aside>
+          <div class="editor-workspace">
+            <div class="editor-toolbar" role="toolbar" aria-label="Map editing tools"><button type="button" data-editor-tool="paint" class="selected">Paint</button><button type="button" data-editor-tool="raise">Raise</button><button type="button" data-editor-tool="lower">Lower</button><button type="button" data-editor-tool="move">Move object</button><button type="button" data-editor-tool="erase">Remove object</button><button type="button" data-editor-tool="pan">Pan</button><span class="toolbar-divider"></span><button type="button" id="editorUndo">Undo</button><button type="button" id="editorRedo">Redo</button><span class="toolbar-divider"></span><button type="button" data-editor-zoom="-0.2" aria-label="Zoom editor out">−</button><button type="button" data-editor-zoom="fit">Fit</button><button type="button" data-editor-zoom="0.2" aria-label="Zoom editor in">+</button></div>
+            <div class="editor-stage"><canvas id="editorCanvas" aria-label="Editable island tile map" tabindex="0"></canvas><div class="editor-map-caption"><span id="editorToolLabel">Paint: grassland</span><span id="editorObjectCount"></span></div></div>
+            <div class="editor-footer"><span id="editorStatus" role="status">Your boat follows the shoreline automatically. Keep the land connected.</span><span id="editorWaitMessage"></span></div>
+          </div>
+        </div>
       </section>
 
       <section class="island-select-screen screen" id="islandSelectScreen" aria-label="Choose a starting island" hidden>
@@ -105,16 +155,25 @@
           <div class="top-actions">
             <div class="status-pill" id="heroLabel">Player One</div>
             <div class="status-pill" id="locationLabel">Harbor of Legends</div>
+            <div class="status-pill" id="crewLabel">Solo expedition</div>
             <button class="secondary-button compact-button" type="button" id="mainMenuButton">Menu</button>
           </div>
         </header>
 
         <section class="play-area">
           <div class="world-stage" id="worldStage">
-            <canvas id="worldCanvas" tabindex="0" aria-label="Playable 3D island world"></canvas>
+            <canvas id="worldCanvas" tabindex="0" aria-label="Isometric tiled island map. Click a tile to walk, or choose a landmark in the field journal."></canvas>
             <div class="world-loading" id="worldLoading">Building island...</div>
 
+            <div class="map-heading"><span class="map-kicker">THE ARCHIPELAGO</span><span>Island expedition chart</span></div>
+            <div class="map-tools" role="group" aria-label="Map zoom">
+              <button type="button" data-zoom="-0.15" aria-label="Zoom out">−</button>
+              <button type="button" data-zoom="reset" aria-label="Fit island to view">Fit</button>
+              <button type="button" data-zoom="0.15" aria-label="Zoom in">+</button>
+            </div>
+
             <aside class="hud-panel" aria-label="Game status">
+              <p class="eyebrow journal-heading">Field journal <span>01 / EXPEDITION</span></p>
               <div class="hud-row">
                 <span class="hud-label">Island</span>
                 <div>
@@ -122,30 +181,35 @@
                   <span class="hud-detail" id="islandBiome">Sunlit harbor</span>
                 </div>
               </div>
+              <div class="discovery-status"><span id="discoveryCount">0 / 4 explored</span><progress id="discoveryProgress" value="0" max="4" aria-label="Island exploration progress"></progress></div>
+              <div class="landmark-list" id="landmarkList" aria-label="Island landmarks"></div>
               <div class="hud-row">
                 <span class="hud-label">Goal</span>
                 <span id="islandGoal">Visit each island.</span>
               </div>
-              <p id="message" class="message">Use WASD or arrow keys to explore. Press E or Space near a landmark.</p>
+              <p id="message" class="message" aria-live="polite">Click a tile to walk. Choose a miniature to explore.</p>
+              <button class="secondary-button compact-button" id="exploreButton" type="button">Explore nearby <kbd>E</kbd></button>
             </aside>
 
             <div class="control-hint" aria-hidden="true">
-              <span>WASD move</span>
-              <span>E explore</span>
-              <span>Find the boat to travel</span>
+              <span>Click to walk · Drag to pan</span>
+              <span><kbd>WASD</kbd> move</span>
+              <span><kbd>E</kbd> explore</span>
+              <span>Find your boat · Sail to a new island</span>
             </div>
 
             <section class="travel-panel" id="travelPanel" aria-label="Boat destinations" hidden>
               <p class="eyebrow">Aboard the island boat</p>
               <h2>Where should we sail?</h2>
               <div class="island-choice-grid travel-choice-grid" id="travelIslandOptions"></div>
-              <button class="secondary-button compact-button" type="button" id="closeTravelButton">Stay here</button>
+              <button class="secondary-button compact-button" type="button" id="closeTravelButton">Sail back to this island</button>
             </section>
           </div>
         </section>
       </section>
     </main>
 
+    <script src="config.js"></script>
     <script type="module" src="src/main.js"></script>
   </body>
 </html>

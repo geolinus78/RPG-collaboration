@@ -1,0 +1,10 @@
+{
+  "name": "shared-quest",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node scripts/serve-game.mjs",
+    "test": "node --test scripts/multiplayer.test.mjs scripts/multiplayer-client.test.mjs && node scripts/validate-map.mjs && node scripts/validate-islands.mjs"
+  }
+}

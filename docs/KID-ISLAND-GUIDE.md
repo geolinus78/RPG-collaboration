@@ -1,6 +1,6 @@
 # Kid Island Builder Guide
 
-You can create a complete 3D world by editing one JavaScript object. The engine turns your choices into shaped land, moving water, clouds, plants, rocks, glowing crystals, creatures, buildings, and stories.
+You can create a complete isometric island by editing one JavaScript object. The shared map engine turns your choices into stepped terrain tiles, coastal water, miniature trees, rocks, glowing crystals, creatures, buildings, and stories. Terrain size, height, roughness, and coast shape affect the map; wind animates the water strokes. Sky, fog, and sun settings are reserved for future atmosphere effects.
 
 ## Start
 
